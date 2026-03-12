@@ -5,22 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dra. Valentina Ríos — Psicóloga Clínica</title>
 
-  <!-- Preconnect para acelerar recursos externos -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="preconnect" href="https://images.unsplash.com" />
-  <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com" />
 
-  <!-- Preload imagen hero (above-the-fold) -->
-  <link rel="preload" as="image"
-    href="https://images.unsplash.com/photo-1594824476967-48c8b964273f?w=480&q=75&auto=format&fit=crop&fp-y=0.2&fm=webp"
-    fetchpriority="high" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
 
-  <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Jost:wght@300;400;500&display=swap"
-    rel="stylesheet" />
+  <!-- Anti-FOUC -->
+  <script>
+    (function(){
+      var t = localStorage.getItem('theme');
+      if (t) document.documentElement.setAttribute('data-theme', t);
+    })();
+  </script>
 
-  <!-- GSAP — carga normal (síncrona), debe estar antes del script principal -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 
@@ -62,7 +60,16 @@
     html { scroll-behavior: smooth; }
 
     /* ── THEME TRANSITION ── */
-    html.theme-transitioning * { transition: background-color .35s ease, border-color .35s ease, color .2s ease !important; }
+    html.theme-transitioning *,
+    html.theme-transitioning *::before,
+    html.theme-transitioning *::after {
+      transition:
+        background-color .45s ease,
+        border-color .45s ease,
+        color .3s ease,
+        box-shadow .45s ease,
+        fill .3s ease !important;
+    }
 
         /* ── CUSTOM CURSOR ── */
     .cursor-dot {
@@ -109,28 +116,61 @@
     /* ── WHATSAPP FLOAT ── */
     .wa-float {
       position: fixed; bottom: 2rem; right: 2rem; z-index: 500;
-      display: flex; align-items: center; gap: .7rem;
+      display: flex; align-items: center; gap: 0;
       background: #25D366; color: #fff;
-      padding: .75rem 1.3rem .75rem .9rem;
-      border-radius: 50px;
+      width: 54px; height: 54px;
+      padding: 0;
+      border-radius: 50%;
       text-decoration: none;
       font-family: 'Jost', sans-serif; font-size: .88rem; font-weight: 500;
-      box-shadow: 0 6px 28px rgba(37,211,102,.38);
+      box-shadow: 0 6px 28px rgba(37,211,102,.42);
       overflow: hidden;
-      transition: transform .3s ease, box-shadow .3s ease;
-      max-width: 220px;
+      transition: width .4s cubic-bezier(.25,.46,.45,.94),
+                  border-radius .4s cubic-bezier(.25,.46,.45,.94),
+                  box-shadow .3s ease,
+                  transform .3s ease;
+      justify-content: center;
     }
-    .wa-float:hover { transform: translateY(-3px); box-shadow: 0 10px 36px rgba(37,211,102,.45); }
-    .wa-icon { font-size: 1.4rem; flex-shrink: 0; }
+    .wa-float:hover {
+      width: 220px;
+      border-radius: 50px;
+      box-shadow: 0 10px 36px rgba(37,211,102,.55);
+      transform: translateY(-3px);
+      gap: .6rem;
+      justify-content: flex-start;
+      padding: 0 1.2rem 0 .9rem;
+    }
+    .wa-icon {
+      font-size: 1.5rem; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      width: 54px; height: 54px;
+      transition: width .4s cubic-bezier(.25,.46,.45,.94);
+    }
+    .wa-float:hover .wa-icon { width: auto; }
+    .wa-label {
+      white-space: nowrap; overflow: hidden;
+      max-width: 0; opacity: 0;
+      transition: max-width .4s cubic-bezier(.25,.46,.45,.94),
+                  opacity .25s ease .15s;
+      font-size: .85rem;
+    }
+    .wa-float:hover .wa-label { max-width: 160px; opacity: 1; }
     .wa-pulse {
       position: absolute; inset: 0;
-      background: rgba(255,255,255,.15);
-      border-radius: 50px;
-      animation: waPulse 2.5s ease-in-out infinite;
+      border-radius: inherit;
+      box-shadow: 0 0 0 0 rgba(37,211,102,.6);
+      animation: waPulse 2.2s ease-out infinite;
+      pointer-events: none;
     }
     @keyframes waPulse {
-      0%, 100% { transform: scale(1); opacity: .6; }
-      50%       { transform: scale(1.04); opacity: 0; }
+      0%   { box-shadow: 0 0 0 0 rgba(37,211,102,.55); }
+      70%  { box-shadow: 0 0 0 14px rgba(37,211,102,0); }
+      100% { box-shadow: 0 0 0 0 rgba(37,211,102,0); }
+    }
+    @media (max-width: 480px) {
+      .wa-float { width: 50px; height: 50px; }
+      .wa-float:hover { width: 50px; border-radius: 50%; padding: 0; gap: 0; justify-content: center; }
+      .wa-float:hover .wa-label { max-width: 0; opacity: 0; }
     }
 
     /* ── GALLERY ── */
@@ -290,19 +330,128 @@
     .cal-confirm-btn:hover { background: var(--sage); transform: translateY(-1px); }
     .cal-confirm-btn:disabled { opacity: .4; cursor: not-allowed; transform: none; }
 
-    /* ── DARK MODE overrides for specific hard-coded colors ── */
-    [data-theme="dark"] nav { background: var(--nav-bg); border-color: rgba(143,166,138,.12); }
-    [data-theme="dark"] .booking-form { background: rgba(255,255,255,.04); border-color: rgba(255,255,255,.08); }
-    [data-theme="dark"] .service-card { background: var(--card-bg); border-color: var(--border); }
-    [data-theme="dark"] .test-card { background: var(--warm); }
-    [data-theme="dark"] .faq-q { background: var(--card-bg); color: var(--dark); }
-    [data-theme="dark"] .faq-a { background: var(--card-bg); }
-    [data-theme="dark"] .cal-box { background: var(--warm); }
-    [data-theme="dark"] .slot { background: var(--warm); }
-    [data-theme="dark"] #loader { background: var(--white); }
-    [data-theme="dark"] .hero-badge { background: var(--card-bg); }
-    [data-theme="dark"] .how-img-overlay { background: var(--card-bg); }
-    [data-theme="dark"] .theme-toggle { background: var(--card-bg); color: var(--dark); }
+    /* ══════════════════════════════════════════
+       DARK MODE — overrides completos
+    ══════════════════════════════════════════ */
+
+    /* Nav */
+    [data-theme="dark"] nav {
+      background: var(--nav-bg);
+      border-color: rgba(143,166,138,.12);
+    }
+    [data-theme="dark"] .nav-logo,
+    [data-theme="dark"] .nav-links a { color: var(--dark); }
+    [data-theme="dark"] .hamburger span { background: var(--dark); }
+    [data-theme="dark"] .nav-drawer-panel { background: var(--card-bg); }
+    [data-theme="dark"] .nav-drawer a { color: var(--dark); border-color: rgba(143,166,138,.15); }
+
+    /* Hero */
+    [data-theme="dark"] .hero-badge {
+      background: var(--card-bg);
+      box-shadow: 0 8px 32px rgba(0,0,0,.4);
+    }
+    [data-theme="dark"] .badge-text { color: var(--mid); }
+    [data-theme="dark"] .badge-text strong { color: var(--dark); }
+    [data-theme="dark"] .btn-outline {
+      border-color: var(--dark);
+      color: var(--dark);
+    }
+    [data-theme="dark"] .btn-outline:hover { border-color: var(--sage); color: var(--sage); }
+    [data-theme="dark"] .hero-bg-circle {
+      background: radial-gradient(circle at 60% 40%, rgba(143,166,138,.25) 0%, rgba(37,45,40,.6) 70%);
+    }
+
+    /* Strip */
+    [data-theme="dark"] .strip { background: #0e1410; }
+
+    /* About */
+    [data-theme="dark"] #about { background: var(--cream); }
+    [data-theme="dark"] .about-text p { color: var(--mid); }
+    [data-theme="dark"] .credential-item { color: var(--mid); }
+
+    /* Services */
+    [data-theme="dark"] #services { background: var(--bg); }
+    [data-theme="dark"] .service-card {
+      background: var(--card-bg);
+      border-color: var(--border);
+    }
+    [data-theme="dark"] .service-card h3 { color: var(--dark); }
+    [data-theme="dark"] .service-card p { color: var(--mid); }
+    [data-theme="dark"] .service-card.featured { background: #0e1410; border-color: rgba(143,166,138,.2); }
+    [data-theme="dark"] .service-price strong { color: var(--dark); }
+
+    /* How */
+    [data-theme="dark"] #how { background: var(--cream); }
+    [data-theme="dark"] .how-img-overlay {
+      background: var(--card-bg);
+      box-shadow: 0 8px 28px rgba(0,0,0,.4);
+    }
+    [data-theme="dark"] .overlay-text { color: var(--mid); }
+    [data-theme="dark"] .overlay-text strong { color: var(--dark); }
+    [data-theme="dark"] .step-body h4 { color: var(--dark); }
+    [data-theme="dark"] .step-body p { color: var(--mid); }
+
+    /* Testimonials */
+    [data-theme="dark"] #testimonials { background: var(--bg); }
+    [data-theme="dark"] .test-card { background: var(--card-bg); }
+    [data-theme="dark"] .test-body { color: var(--mid); }
+    [data-theme="dark"] .test-name { color: var(--dark); }
+
+    /* Gallery */
+    [data-theme="dark"] #gallery { background: var(--cream); }
+
+    /* Calendar */
+    [data-theme="dark"] #calendario { background: var(--bg); }
+    [data-theme="dark"] .cal-box { background: var(--card-bg); border-color: var(--border); }
+    [data-theme="dark"] .cal-month { color: var(--dark); }
+    [data-theme="dark"] .cal-day { color: var(--dark); }
+    [data-theme="dark"] .cal-day:hover:not(.disabled):not(.empty) { background: rgba(143,166,138,.2); }
+    [data-theme="dark"] .cal-nav-btn { color: var(--mid); border-color: var(--border); }
+    [data-theme="dark"] .slot { background: var(--warm); color: var(--dark); border-color: var(--border); }
+    [data-theme="dark"] .cal-confirm-btn { background: var(--sage); color: #fff; }
+    [data-theme="dark"] .cal-confirm-btn:hover { background: var(--accent); }
+    [data-theme="dark"] .cal-info p { color: var(--mid); }
+
+    /* Booking */
+    [data-theme="dark"] #reservar { background: #0e1410; }
+    [data-theme="dark"] .booking-form {
+      background: rgba(255,255,255,.04);
+      border-color: rgba(255,255,255,.08);
+    }
+
+    /* FAQ */
+    [data-theme="dark"] #faq { background: var(--cream); }
+    [data-theme="dark"] .faq-item { border-color: var(--border); }
+    [data-theme="dark"] .faq-q {
+      background: var(--card-bg);
+      color: var(--dark);
+    }
+    [data-theme="dark"] .faq-q:hover { background: var(--warm); }
+    [data-theme="dark"] .faq-a {
+      background: var(--card-bg);
+      color: var(--mid);
+    }
+    [data-theme="dark"] .faq-text p { color: var(--mid); }
+
+    /* Footer */
+    [data-theme="dark"] footer { background: #0e1410; }
+
+    /* Theme toggle & floating buttons */
+    [data-theme="dark"] .theme-toggle {
+      background: var(--card-bg);
+      color: var(--dark);
+      border-color: var(--border);
+      box-shadow: 0 4px 20px rgba(0,0,0,.4);
+    }
+
+    /* Sections with hard-coded section-label */
+    [data-theme="dark"] .section-label { color: var(--sage); }
+    [data-theme="dark"] h1,
+    [data-theme="dark"] h2,
+    [data-theme="dark"] h3,
+    [data-theme="dark"] h4 { color: var(--dark); }
+    [data-theme="dark"] h1 em,
+    [data-theme="dark"] h2 em { color: var(--sage); }
 
     /* gallery responsive */
     @media (max-width: 768px) {
@@ -910,7 +1059,7 @@
 <a class="wa-float" href="https://wa.me/5491100000000?text=Hola%20Valentina%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20una%20sesi%C3%B3n" target="_blank" rel="noopener">
   <div class="wa-pulse"></div>
   <span class="wa-icon">💬</span>
-  <span>Escribime por WhatsApp</span>
+  <span class="wa-label">Escribime por WhatsApp</span>
 </a>
 
 <!-- LIGHTBOX -->
@@ -1475,1099 +1624,260 @@
     <span>Diseñado con ♥</span>
   </div>
 </footer>
-  
-</head>
-<body>
-<!-- CURSOR -->
-<div class="cursor-dot"  id="cursor-dot"></div>
-<div class="cursor-ring" id="cursor-ring"></div>
-
-<!-- DARK MODE TOGGLE -->
-<button class="theme-toggle" id="theme-toggle" aria-label="Cambiar tema">🌙</button>
-
-<!-- WHATSAPP FLOAT -->
-<a class="wa-float" href="https://wa.me/5491100000000?text=Hola%20Valentina%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20una%20sesi%C3%B3n" target="_blank" rel="noopener">
-  <div class="wa-pulse"></div>
-  <span class="wa-icon">💬</span>
-  <span>Escribime por WhatsApp</span>
-</a>
-
-<!-- LIGHTBOX -->
-<div class="lightbox" id="lightbox">
-  <button class="lb-close" onclick="closeLightbox()">✕</button>
-  <button class="lb-nav lb-prev" onclick="lbNav(-1)">‹</button>
-  <img id="lb-img" src="" alt="" />
-  <button class="lb-nav lb-next" onclick="lbNav(1)">›</button>
-</div>
-
-<!-- NAV -->
-<nav id="navbar">
-  <a href="#" class="nav-logo">Dra. Valentina <span>Ríos</span></a>
-  <ul class="nav-links">
-    <li><a href="#about">Sobre mí</a></li>
-    <li><a href="#services">Servicios</a></li>
-    <li><a href="#how">Proceso</a></li>
-    <li><a href="#testimonials">Testimonios</a></li>
-    <li><a href="#gallery">Galería</a></li>
-    <li><a href="#calendario">Agenda</a></li>
-    <li><a href="#faq">FAQ</a></li>
-  </ul>
-  <a href="#reservar" class="nav-cta">Reservar sesión</a>
-  <button class="hamburger" id="hamburger" aria-label="Abrir menú">
-    <span></span><span></span><span></span>
-  </button>
-</nav>
-
-<!-- MOBILE DRAWER -->
-<div class="nav-drawer" id="nav-drawer">
-  <div class="nav-drawer-panel">
-    <a href="#about"        onclick="closeDrawer()">Sobre mí</a>
-    <a href="#services"     onclick="closeDrawer()">Servicios</a>
-    <a href="#how"          onclick="closeDrawer()">Proceso</a>
-    <a href="#testimonials" onclick="closeDrawer()">Testimonios</a>
-    <a href="#gallery"      onclick="closeDrawer()">Galería</a>
-    <a href="#calendario"  onclick="closeDrawer()">Agenda</a>
-    <a href="#faq"          onclick="closeDrawer()">FAQ</a>
-    <a href="#reservar" class="drawer-cta" onclick="closeDrawer()">Reservar sesión</a>
-  </div>
-</div>
-
-<!-- HERO -->
-<section id="hero">
-  <div class="hero-bg-circle"></div>
-  <div class="hero-text">
-    <div class="hero-tag">Psicología Clínica</div>
-    <h1>Un espacio para <em>sanar</em> y crecer contigo</h1>
-    <p class="hero-desc">Acompañamiento psicológico profesional, empático y personalizado. Porque tu bienestar mental merece atención de calidad.</p>
-    <div class="hero-btns">
-      <a href="#reservar" class="btn-primary">Reservar mi primera sesión</a>
-      <a href="#about" class="btn-outline">Conocer más</a>
-    </div>
-  </div>
-  <div class="hero-img">
-    <img fetchpriority="high" src="https://images.unsplash.com/photo-1594824476967-48c8b964273f?w=480&q=75&auto=format&fit=crop&fp-y=0.2&fm=webp" alt="Dra. Valentina Ríos" />
-    <div class="hero-badge">
-      <div class="badge-icon">🏅</div>
-      <div class="badge-text"><strong>+10 años</strong> de experiencia clínica</div>
-    </div>
-    <div class="hero-stat">
-      <div class="num">500+</div>
-      <div class="lbl">Pacientes acompañados</div>
-    </div>
-  </div>
-</section>
-
-<!-- STRIP -->
-<div class="strip">
-  <div class="strip-inner">
-    <div class="strip-item"><span>✦</span> Ansiedad y estrés</div>
-    <div class="strip-item"><span>✦</span> Terapia de pareja</div>
-    <div class="strip-item"><span>✦</span> Depresión</div>
-    <div class="strip-item"><span>✦</span> Autoestima</div>
-    <div class="strip-item"><span>✦</span> Duelo y pérdida</div>
-    <div class="strip-item"><span>✦</span> Trauma</div>
-    <div class="strip-item"><span>✦</span> Sesiones online</div>
-    <div class="strip-item"><span>✦</span> Consultas presenciales</div>
-    <!-- repite para loop suave -->
-    <div class="strip-item"><span>✦</span> Ansiedad y estrés</div>
-    <div class="strip-item"><span>✦</span> Terapia de pareja</div>
-    <div class="strip-item"><span>✦</span> Depresión</div>
-    <div class="strip-item"><span>✦</span> Autoestima</div>
-    <div class="strip-item"><span>✦</span> Duelo y pérdida</div>
-    <div class="strip-item"><span>✦</span> Trauma</div>
-    <div class="strip-item"><span>✦</span> Sesiones online</div>
-    <div class="strip-item"><span>✦</span> Consultas presenciales</div>
-  </div>
-</div>
-
-<!-- ABOUT -->
-<section id="about">
-  <div class="about-img-wrap fade-in">
-    <img src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=500&q=75&auto=format&fit=crop&fp-y=0.15&fm=webp" alt="Valentina Ríos en consulta" />
-    <div class="about-quote">"Cada mente merece ser escuchada sin juicio."</div>
-  </div>
-  <div class="about-text fade-in">
-    <div class="section-label">Sobre mí</div>
-    <h2>Hola, soy la <em>Dra. Valentina Ríos</em></h2>
-    <p>Soy psicóloga clínica con más de 10 años de experiencia acompañando a personas en sus procesos de cambio y sanación. Me especializo en terapia cognitivo-conductual y enfoques humanistas, adaptando cada tratamiento a las necesidades únicas de cada persona.</p>
-    <p>Creo que la terapia más efectiva nace de un vínculo de confianza genuino. Mi consulta es un espacio libre de juicio donde puedes ser completamente tú.</p>
-    <div class="credentials">
-      <div class="credential-item"><div class="cred-dot"></div>Licenciada en Psicología — UBA (2012)</div>
-      <div class="credential-item"><div class="cred-dot"></div>Especialización en Terapia Cognitivo-Conductual — ACTA</div>
-      <div class="credential-item"><div class="cred-dot"></div>Formación en Mindfulness y Regulación Emocional</div>
-      <div class="credential-item"><div class="cred-dot"></div>Miembro activa de la Asociación Argentina de TCC</div>
-    </div>
-  </div>
-</section>
-
-<!-- SERVICES -->
-<section id="services">
-  <div class="services-header fade-in">
-    <div class="section-label">Lo que ofrezco</div>
-    <h2>Servicios diseñados para <em>tu bienestar</em></h2>
-  </div>
-  <div class="services-grid fade-in">
-
-    <!-- 1. Terapia Individual -->
-    <div class="service-card">
-      <img loading="lazy" decoding="async" class="service-img"
-        src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=70&auto=format&fit=crop&crop=top&fm=webp"
-        alt="Terapia Individual" />
-      <div class="service-body">
-        <div class="service-icon">🌱</div>
-        <h3>Terapia Individual</h3>
-        <p>Un espacio personal para explorar tus emociones, pensamientos y patrones de conducta. Enfoque personalizado para cada etapa de tu proceso.</p>
-        <div class="service-price">Desde <strong>$8.000</strong> / sesión</div>
-      </div>
-    </div>
-
-    <!-- 2. Plan Intensivo (featured) -->
-    <div class="service-card featured">
-      <img loading="lazy" decoding="async" class="service-img"
-        src="https://images.unsplash.com/photo-1544027993-37dbfe43562a?w=400&q=70&auto=format&fit=crop&fm=webp"
-        alt="Plan Intensivo" />
-      <div class="service-body">
-        <div class="service-icon">💫</div>
-        <h3>Plan Intensivo</h3>
-        <p>4 sesiones mensuales + seguimiento por WhatsApp. Ideal para quienes quieren un acompañamiento más profundo y sostenido en el tiempo.</p>
-        <div class="service-price">Desde <strong>$28.000</strong> / mes</div>
-      </div>
-    </div>
-
-    <!-- 3. Terapia de Pareja -->
-    <div class="service-card">
-      <img loading="lazy" decoding="async" class="service-img"
-        src="https://images.unsplash.com/photo-1516195851888-6f1a981a862e?w=400&q=70&auto=format&fit=crop&fm=webp"
-        alt="Terapia de Pareja" />
-      <div class="service-body">
-        <div class="service-icon">💑</div>
-        <h3>Terapia de Pareja</h3>
-        <p>Trabajamos juntos para mejorar la comunicación, resolver conflictos y fortalecer el vínculo afectivo entre ambos.</p>
-        <div class="service-price">Desde <strong>$12.000</strong> / sesión</div>
-      </div>
-    </div>
-
-    <!-- 4. Sesión Online -->
-    <div class="service-card">
-      <img loading="lazy" decoding="async" class="service-img"
-        src="https://images.unsplash.com/photo-1587614382346-4ec70e388b28?w=400&q=70&auto=format&fit=crop&fm=webp"
-        alt="Sesión Online" />
-      <div class="service-body">
-        <div class="service-icon">💻</div>
-        <h3>Sesión Online</h3>
-        <p>Misma calidad terapéutica desde la comodidad de tu hogar. Videollamada segura y privada, disponible en todo el país.</p>
-        <div class="service-price">Desde <strong>$7.500</strong> / sesión</div>
-      </div>
-    </div>
-
-    <!-- 5. Taller de Mindfulness -->
-    <div class="service-card">
-      <img loading="lazy" decoding="async" class="service-img"
-        src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=400&q=70&auto=format&fit=crop&fm=webp"
-        alt="Taller de Mindfulness" />
-      <div class="service-body">
-        <div class="service-icon">🧘</div>
-        <h3>Taller de Mindfulness</h3>
-        <p>Grupos reducidos para aprender técnicas de atención plena, manejo del estrés y regulación emocional. Cupos limitados.</p>
-        <div class="service-price">Desde <strong>$5.000</strong> / encuentro</div>
-      </div>
-    </div>
-
-    <!-- 6. Primera Consulta -->
-    <div class="service-card">
-      <img loading="lazy" decoding="async" class="service-img"
-        src="https://images.unsplash.com/photo-1573497491765-dccce02b29df?w=400&q=70&auto=format&fit=crop&fm=webp"
-        alt="Primera Consulta" />
-      <div class="service-body">
-        <div class="service-icon">🌙</div>
-        <h3>Primera Consulta</h3>
-        <p>Una sesión de evaluación inicial donde hablamos de tus necesidades, objetivos y determinamos juntos el mejor camino terapéutico.</p>
-        <div class="service-price"><strong>Gratuita</strong> · 30 minutos</div>
-      </div>
-    </div>
-
-  </div>
-</section>
-
-<!-- HOW -->
-<section id="how">
-  <div class="how-grid">
-    <div class="fade-in">
-      <div class="section-label">El proceso</div>
-      <h2>¿Cómo <em>funciona</em>?</h2>
-      <div class="how-steps">
-        <div class="step">
-          <div class="step-num">01</div>
-          <div class="step-body">
-            <h4>Reservá tu sesión online</h4>
-            <p>Elegí el día y horario que más te convenga desde el formulario de reserva. Recibirás confirmación inmediata.</p>
-          </div>
-        </div>
-        <div class="step">
-          <div class="step-num">02</div>
-          <div class="step-body">
-            <h4>Abonás con tu método preferido</h4>
-            <p>Tarjeta de crédito/débito o Mercado Pago. Pago 100% seguro con confirmación al instante.</p>
-          </div>
-        </div>
-        <div class="step">
-          <div class="step-num">03</div>
-          <div class="step-body">
-            <h4>Nos encontramos</h4>
-            <p>Presencial en consultorio o por videollamada. Recibirás el link o dirección por email y WhatsApp.</p>
-          </div>
-        </div>
-        <div class="step">
-          <div class="step-num">04</div>
-          <div class="step-body">
-            <h4>Seguimos creciendo juntos</h4>
-            <p>Evaluamos tu progreso y ajustamos el plan según tus objetivos. Estoy a tu lado en cada paso.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="how-img fade-in">
-      <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1616587226960-4a03badbe8bf?w=500&q=75&auto=format&fit=crop&fm=webp" alt="Consulta de psicología" />
-      <div class="how-img-overlay">
-        <div class="overlay-icon">📅</div>
-        <div class="overlay-text">
-          <strong>Turnos disponibles</strong>
-          Lun – Sáb, 9:00 – 20:00
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- TESTIMONIALS -->
-<section id="testimonials">
-  <div class="test-header fade-in">
-    <div class="section-label">Testimonios</div>
-    <h2>Lo que dicen mis <em>pacientes</em></h2>
-  </div>
-  <div class="test-grid fade-in">
-    <div class="test-card">
-      <div class="test-stars">★★★★★</div>
-      <p class="test-body">"Valentina me ayudó a entender patrones que nunca había visto en mí. Después de 6 meses de terapia me siento una persona diferente, más libre y en paz conmigo misma."</p>
-      <div class="test-author">
-        <div class="test-avatar"><img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=80&q=65&fm=webp&auto=format&fit=crop&fp-x=0.5&fp-y=0.2" alt="María G." /></div>
-        <div><div class="test-name">María G.</div><div class="test-role">Paciente desde 2022</div></div>
-      </div>
-    </div>
-    <div class="test-card">
-      <div class="test-stars">★★★★★</div>
-      <p class="test-body">"Empecé la terapia con mucho miedo y poca esperanza. Valentina creó un ambiente tan seguro que en pocos meses pude hablar de cosas que nunca había contado a nadie."</p>
-      <div class="test-author">
-        <div class="test-avatar"><img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&q=65&fm=webp&auto=format&fit=crop&fp-x=0.5&fp-y=0.15" alt="Rodrigo P." /></div>
-        <div><div class="test-name">Rodrigo P.</div><div class="test-role">Paciente desde 2023</div></div>
-      </div>
-    </div>
-    <div class="test-card">
-      <div class="test-stars">★★★★★</div>
-      <p class="test-body">"Las sesiones de pareja salvaron nuestra relación. Aprendimos a comunicarnos de verdad. Lo que nos regaló Valentina no tiene precio."</p>
-      <div class="test-author">
-        <div class="test-avatar"><img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&q=65&fm=webp&auto=format&fit=crop&fp-x=0.5&fp-y=0.1" alt="Laura" /></div>
-        <div><div class="test-name">Laura & Martín</div><div class="test-role">Pacientes desde 2021</div></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- BOOKING -->
-<section id="reservar">
-  <div class="booking-wrap">
-    <div class="booking-info fade-in">
-      <div class="section-label" style="color:var(--sage-lt);">Reservas</div>
-      <h2>Agendá tu <em>sesión</em> hoy</h2>
-      <p>Dar el primer paso puede ser difícil, pero estoy aquí para acompañarte. Completá el formulario y recibís confirmación inmediata.</p>
-      <div class="booking-features">
-        <div class="booking-feature"><span class="bf-icon">✓</span> Confirmación por email y WhatsApp</div>
-        <div class="booking-feature"><span class="bf-icon">✓</span> Pago 100% seguro y encriptado</div>
-        <div class="booking-feature"><span class="bf-icon">✓</span> Cancelación hasta 24 hs antes sin cargo</div>
-        <div class="booking-feature"><span class="bf-icon">✓</span> Factura electrónica incluida</div>
-        <div class="booking-feature"><span class="bf-icon">✓</span> Recordatorio automático 1 hora antes</div>
-      </div>
-    </div>
-
-    <div class="booking-form fade-in">
-      <div id="form-content">
-        <div class="form-title">Completá tus datos</div>
-        <div class="form-row">
-          <div class="form-group">
-            <label>Nombre</label>
-            <input type="text" id="fname" placeholder="Tu nombre" />
-          </div>
-          <div class="form-group">
-            <label>Apellido</label>
-            <input type="text" id="lname" placeholder="Tu apellido" />
-          </div>
-        </div>
-        <div class="form-group">
-          <label>Email</label>
-          <input type="email" id="email" placeholder="tu@email.com" />
-        </div>
-        <div class="form-group">
-          <label>Teléfono / WhatsApp</label>
-          <input type="tel" id="phone" placeholder="+54 9 11 0000-0000" />
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label>Tipo de sesión</label>
-            <select id="session-type">
-              <option value="">Seleccioná</option>
-              <option>Primera Consulta (Gratis)</option>
-              <option>Terapia Individual</option>
-              <option>Sesión Online</option>
-              <option>Terapia de Pareja</option>
-              <option>Plan Intensivo</option>
-              <option>Taller de Mindfulness</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Modalidad</label>
-            <select id="modality">
-              <option value="">Seleccioná</option>
-              <option>Presencial (CABA)</option>
-              <option>Online (videollamada)</option>
-            </select>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label>Fecha preferida</label>
-            <input type="date" id="date" />
-          </div>
-          <div class="form-group">
-            <label>Horario preferido</label>
-            <select id="time">
-              <option value="">Seleccioná</option>
-              <option>09:00</option><option>10:00</option><option>11:00</option>
-              <option>12:00</option><option>15:00</option><option>16:00</option>
-              <option>17:00</option><option>18:00</option><option>19:00</option>
-            </select>
-          </div>
-        </div>
-        <div class="form-group">
-          <label>Mensaje (opcional)</label>
-          <textarea id="message" placeholder="Contame brevemente qué te trajo por acá..."></textarea>
-        </div>
-
-        <!-- PAYMENT -->
-        <div class="payment-section">
-          <div class="payment-label">Método de pago</div>
-          <div class="payment-methods">
-            <button class="pay-btn" onclick="selectPay(this,'mp')">
-              <span class="pay-ico">💙</span> Mercado Pago
-            </button>
-            <button class="pay-btn" onclick="selectPay(this,'card')">
-              <span class="pay-ico">💳</span> Tarjeta
-            </button>
-            <button class="pay-btn" onclick="selectPay(this,'later')">
-              <span class="pay-ico">📅</span> Pagar en consulta
-            </button>
-          </div>
-
-          <!-- Card fields -->
-          <div class="card-fields" id="card-fields">
-            <div class="form-group">
-              <label>Número de tarjeta</label>
-              <input type="text" id="card-num" placeholder="0000 0000 0000 0000" maxlength="19" oninput="formatCard(this)" />
-            </div>
-            <div class="form-row">
-              <div class="form-group">
-                <label>Vencimiento</label>
-                <input type="text" placeholder="MM/AA" maxlength="5" oninput="formatExp(this)" />
-              </div>
-              <div class="form-group">
-                <label>CVV</label>
-                <input type="text" placeholder="123" maxlength="4" />
-              </div>
-            </div>
-            <div class="form-group">
-              <label>Nombre en la tarjeta</label>
-              <input type="text" placeholder="Como aparece en la tarjeta" />
-            </div>
-          </div>
-
-          <!-- Mercado Pago info -->
-          <div class="mp-info" id="mp-info">
-            Al confirmar serás redirigido a <span class="mp-logo">Mercado Pago</span> para completar el pago de forma segura. Aceptamos todas las tarjetas y saldo MP.
-          </div>
-        </div>
-
-        <button class="btn-submit" id="submit-btn" onclick="submitForm()">Confirmar Reserva</button>
-        <p class="form-note">🔒 Pago encriptado · Tus datos están protegidos</p>
-      </div>
-
-      <!-- SUCCESS -->
-      <div class="success-msg" id="success-msg">
-        <div class="success-icon">🌿</div>
-        <h3>¡Reserva confirmada!</h3>
-        <p>Te enviamos un email con todos los detalles. También recibirás un recordatorio por WhatsApp. ¡Estoy ansiosa por acompañarte!</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- GALLERY -->
-<section id="gallery">
-  <div class="gallery-header fade-in">
-    <div class="section-label">Galería</div>
-    <h2>Mi espacio de <em>consulta</em></h2>
-    <p style="font-size:.95rem;line-height:1.8;color:var(--mid);font-weight:300;margin-top:.8rem;">Un lugar cálido, seguro y pensado para que te sientas cómodo desde el primer momento.</p>
-  </div>
-  <div class="gallery-grid fade-in">
-    <div class="gallery-item" onclick="openLightbox(0)">
-      <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=600&q=70&auto=format&fit=crop&fm=webp" alt="Consultorio" loading="lazy"/>
-      <div class="gallery-overlay"><span class="gallery-caption">Sala de espera</span></div>
-    </div>
-    <div class="gallery-item" onclick="openLightbox(1)">
-      <img src="https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&q=70&auto=format&fit=crop&fm=webp" alt="Consultorio" loading="lazy"/>
-      <div class="gallery-overlay"><span class="gallery-caption">Rincón de lectura</span></div>
-    </div>
-    <div class="gallery-item" onclick="openLightbox(2)">
-      <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&q=70&auto=format&fit=crop&fm=webp" alt="Consultorio" loading="lazy"/>
-      <div class="gallery-overlay"><span class="gallery-caption">Espacio terapéutico</span></div>
-    </div>
-    <div class="gallery-item" onclick="openLightbox(3)">
-      <img src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=400&q=70&auto=format&fit=crop&fm=webp" alt="Consultorio" loading="lazy"/>
-      <div class="gallery-overlay"><span class="gallery-caption">Detalle decorativo</span></div>
-    </div>
-    <div class="gallery-item" onclick="openLightbox(4)">
-      <img src="https://images.unsplash.com/photo-1604014237800-1c9102c219da?w=600&q=70&auto=format&fit=crop&fm=webp" alt="Consultorio" loading="lazy"/>
-      <div class="gallery-overlay"><span class="gallery-caption">Sala principal</span></div>
-    </div>
-    <div class="gallery-item" onclick="openLightbox(5)">
-      <img src="https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=400&q=70&auto=format&fit=crop&fm=webp" alt="Consultorio" loading="lazy"/>
-      <div class="gallery-overlay"><span class="gallery-caption">Vista del consultorio</span></div>
-    </div>
-  </div>
-</section>
-
-<!-- CALENDARIO -->
-<section id="calendario">
-  <div class="cal-wrap">
-    <div class="cal-info fade-in">
-      <div class="section-label">Agenda en línea</div>
-      <h2>Elegí tu <em>día y horario</em></h2>
-      <p>Visualizá la disponibilidad en tiempo real y seleccioná el turno que más se adapte a tu rutina. Confirmación inmediata por email.</p>
-      <div style="display:flex;flex-direction:column;gap:.8rem;margin-top:1rem;">
-        <div style="display:flex;gap:.7rem;align-items:center;font-size:.9rem;color:var(--mid);">
-          <span style="width:12px;height:12px;border-radius:50%;background:var(--sage);flex-shrink:0;"></span> Turnos disponibles
-        </div>
-        <div style="display:flex;gap:.7rem;align-items:center;font-size:.9rem;color:var(--mid);">
-          <span style="width:12px;height:12px;border-radius:50%;background:var(--accent);flex-shrink:0;"></span> Hoy
-        </div>
-        <div style="display:flex;gap:.7rem;align-items:center;font-size:.9rem;color:var(--mid);">
-          <span style="width:12px;height:12px;border-radius:50%;background:rgba(143,166,138,.25);flex-shrink:0;"></span> No disponible
-        </div>
-      </div>
-    </div>
-    <div class="cal-box fade-in" id="calendar-box">
-      <div class="cal-header">
-        <button class="cal-nav-btn" onclick="calNav(-1)">‹</button>
-        <div class="cal-month" id="cal-month-label"></div>
-        <button class="cal-nav-btn" onclick="calNav(1)">›</button>
-      </div>
-      <div class="cal-days-header">
-        <span>Do</span><span>Lu</span><span>Ma</span>
-        <span>Mi</span><span>Ju</span><span>Vi</span><span>Sá</span>
-      </div>
-      <div class="cal-days" id="cal-days"></div>
-      <div class="time-slots" id="time-slots" style="display:none;">
-        <div class="time-slots-label">Horarios disponibles</div>
-        <div class="slots-grid" id="slots-grid"></div>
-      </div>
-      <button class="cal-confirm-btn" id="cal-confirm" disabled onclick="calConfirm()">
-        Seleccioná un día y horario
-      </button>
-    </div>
-  </div>
-</section>
-
-<!-- FAQ -->
-<section id="faq">
-  <div class="faq-wrap">
-    <div class="faq-text">
-      <div class="section-label">FAQ</div>
-      <h2>Preguntas <em>frecuentes</em></h2>
-      <p>Si tenés alguna duda que no está acá, escribime directamente por WhatsApp o email. Con gusto te respondo.</p>
-    </div>
-    <div class="faq-list">
-      <div class="faq-item">
-        <button class="faq-q" onclick="toggleFaq(this)">¿Cómo sé si la terapia es para mí? <span class="faq-arrow">▾</span></button>
-        <div class="faq-a">Si estás pasando por momentos difíciles, sentís que algo no está bien o simplemente querés crecer y conocerte mejor, la terapia puede ser muy beneficiosa. No hace falta tener una "crisis" para empezar.</div>
-      </div>
-      <div class="faq-item">
-        <button class="faq-q" onclick="toggleFaq(this)">¿Cuánto dura cada sesión? <span class="faq-arrow">▾</span></button>
-        <div class="faq-a">Las sesiones individuales duran 50 minutos, las de pareja 60-70 minutos. La primera consulta de evaluación es de 30 minutos y es completamente gratuita.</div>
-      </div>
-      <div class="faq-item">
-        <button class="faq-q" onclick="toggleFaq(this)">¿Cuántas sesiones voy a necesitar? <span class="faq-arrow">▾</span></button>
-        <div class="faq-a">Depende de cada persona y de sus objetivos. Algunos cambios se notan en pocas semanas; otros procesos requieren más tiempo. Lo evaluamos juntas desde el inicio y lo revisamos periódicamente.</div>
-      </div>
-      <div class="faq-item">
-        <button class="faq-q" onclick="toggleFaq(this)">¿Las sesiones online son igual de efectivas? <span class="faq-arrow">▾</span></button>
-        <div class="faq-a">Sí. Numerosos estudios muestran que la terapia online tiene la misma eficacia que la presencial. Muchos pacientes incluso prefieren la comodidad de hacerla desde casa.</div>
-      </div>
-      <div class="faq-item">
-        <button class="faq-q" onclick="toggleFaq(this)">¿Qué pasa si necesito cancelar un turno? <span class="faq-arrow">▾</span></button>
-        <div class="faq-a">Podés cancelar o reprogramar sin cargo hasta 24 horas antes de tu sesión. Las cancelaciones con menos anticipación se cobran el 50% del valor de la sesión.</div>
-      </div>
-      <div class="faq-item">
-        <button class="faq-q" onclick="toggleFaq(this)">¿Puedo pagar con obra social o prepaga? <span class="faq-arrow">▾</span></button>
-        <div class="faq-a">Actualmente trabajo de forma particular. Podés solicitar un recibo oficial para luego gestionar el reintegro con tu obra social, según lo que permita tu cobertura.</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- FOOTER -->
-<footer>
-  <div class="footer-grid">
-    <div class="footer-brand">
-      <a href="#" class="nav-logo">Dra. Valentina <span>Ríos</span></a>
-      <p>Psicóloga clínica especializada en terapia cognitivo-conductual y bienestar emocional. Consultorio en CABA y atención online.</p>
-    </div>
-    <div class="footer-col">
-      <h4>Navegación</h4>
-      <ul>
-        <li><a href="#about">Sobre mí</a></li>
-        <li><a href="#services">Servicios</a></li>
-        <li><a href="#how">Proceso</a></li>
-        <li><a href="#testimonials">Testimonios</a></li>
-        <li><a href="#reservar">Reservar sesión</a></li>
-      </ul>
-    </div>
-    <div class="footer-col">
-      <h4>Contacto</h4>
-      <ul>
-        <li><a href="/cdn-cgi/l/email-protection#4d2522212c0d3b2c2128233924232c3f24223e3d3e242e2221222a242c632e2220632c3f"><span class="__cf_email__" data-cfemail="9ff7f0f3fedfe9fef3faf1ebf6f1feedf6f0ecb1fcf0f2b1feed">[email&#160;protected]</span></a></li>
-        <li><a href="https://wa.me/5491100000000">WhatsApp: +54 9 11 0000-0000</a></li>
-        <li><a href="#">Instagram: @dra.valentinarios</a></li>
-        <li><a href="#">Palermo, CABA · Sólo con turno</a></li>
-      </ul>
-    </div>
-  </div>
-  <div class="footer-bottom">
-    <span>© 2024 Dra. Valentina Ríos · Matrícula Nº 12345 · CABA</span>
-    <span>Diseñado con ♥</span>
-  </div>
-</footer>
 
 <script>
-gsap.registerPlugin(ScrollTrigger);
+  gsap.registerPlugin(ScrollTrigger);
 
-  /* ── ANIMATIONS ── */
-    /* ── HERO ── */
-    const heroTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
-    heroTl
-      .from('nav',             { y: -60, opacity: 0, duration: .9 })
-      .from('.hero-tag',       { y: 30,  opacity: 0, duration: .7 }, '-=.4')
-      .from('#hero h1',        { y: 50,  opacity: 0, duration: .9 }, '-=.5')
-      .from('.hero-desc',      { y: 30,  opacity: 0, duration: .7 }, '-=.5')
-      .from('.hero-btns a',    { y: 20,  opacity: 0, duration: .6, stagger: .15 }, '-=.4')
-      .from('.hero-img img',   { scale: 1.08, opacity: 0, duration: 1.1, ease: 'power2.out' }, '-=.8')
-      .from('.hero-badge',     { x: -40, opacity: 0, duration: .7, ease: 'back.out(1.4)' }, '-=.4')
-      .from('.hero-stat',      { x: 40,  opacity: 0, duration: .7, ease: 'back.out(1.4)' }, '-=.6')
-      .from('.hero-bg-circle', { scale: .7, opacity: 0, duration: 1.4, ease: 'power2.out' }, 0)
-      .from('.wa-float',       { y: 30, opacity: 0, duration: .6, ease: 'back.out(1.4)' }, '-=.4')
-      .from('.theme-toggle',   { y: 30, opacity: 0, duration: .6, ease: 'back.out(1.4)' }, '-=.5');
-
-    gsap.from('.strip', { opacity: 0, y: 20, duration: .8, delay: .4, ease: 'power2.out' });
-
-    /* ── ABOUT ── */
-    gsap.from('.about-img-wrap img', {
-      scrollTrigger: { trigger: '#about', start: 'top 80%' },
-      clipPath: 'inset(100% 0% 0% 0%)', duration: 1.1, ease: 'power3.out'
-    });
-    gsap.from('.about-quote', {
-      scrollTrigger: { trigger: '#about', start: 'top 65%' },
-      scale: .8, opacity: 0, duration: .8, ease: 'back.out(1.6)', delay: .4
-    });
-    const aboutText = document.querySelector('.about-text');
-    if (aboutText) gsap.from(aboutText.children, {
-      scrollTrigger: { trigger: '#about', start: 'top 75%' },
-      y: 40, opacity: 0, duration: .8, stagger: .12, ease: 'power3.out'
-    });
-    gsap.from('.credential-item', {
-      scrollTrigger: { trigger: '.credentials', start: 'top 85%' },
-      x: -30, opacity: 0, duration: .6, stagger: .1, ease: 'power2.out'
-    });
-
-    /* ── SERVICES ── */
-    gsap.from('.services-header > *', {
-      scrollTrigger: { trigger: '#services', start: 'top 80%' },
-      y: 30, opacity: 0, duration: .7, stagger: .15, ease: 'power3.out'
-    });
-    gsap.from('.service-card', {
-      scrollTrigger: { trigger: '.services-grid', start: 'top 80%' },
-      y: 60, opacity: 0, duration: .75, stagger: { amount: .7 }, ease: 'power3.out'
-    });
-
-    /* ── HOW ── */
-    gsap.from('.step', {
-      scrollTrigger: { trigger: '.how-steps', start: 'top 80%' },
-      x: -50, opacity: 0, duration: .7, stagger: .18, ease: 'power3.out'
-    });
-    gsap.from('.how-img img', {
-      scrollTrigger: { trigger: '.how-grid', start: 'top 75%' },
-      scale: 1.06, opacity: 0, duration: 1.1, ease: 'power2.out'
-    });
-    gsap.from('.how-img-overlay', {
-      scrollTrigger: { trigger: '.how-img', start: 'top 70%' },
-      x: -40, opacity: 0, duration: .8, ease: 'back.out(1.4)', delay: .4
-    });
-
-    /* ── TESTIMONIALS ── */
-    gsap.from('.test-card', {
-      scrollTrigger: { trigger: '.test-grid', start: 'top 80%' },
-      y: 50, opacity: 0, rotation: 2, duration: .75,
-      stagger: { amount: .5 }, ease: 'power3.out'
-    });
-
-    /* ── GALLERY ── */
-    gsap.from('.gallery-header > *', {
-      scrollTrigger: { trigger: '#gallery', start: 'top 80%' },
-      y: 30, opacity: 0, duration: .7, stagger: .12, ease: 'power3.out'
-    });
-    gsap.from('.gallery-item', {
-      scrollTrigger: { trigger: '.gallery-grid', start: 'top 82%' },
-      y: 50, opacity: 0, duration: .7, stagger: { amount: .6 }, ease: 'power3.out'
-    });
-
-    /* ── CALENDAR ── */
-    const calInfo = document.querySelector('.cal-info');
-    if (calInfo) gsap.from(calInfo.children, {
-      scrollTrigger: { trigger: '#calendario', start: 'top 80%' },
-      x: -40, opacity: 0, duration: .8, stagger: .12, ease: 'power3.out'
-    });
-    gsap.from('.cal-box', {
-      scrollTrigger: { trigger: '#calendario', start: 'top 80%' },
-      y: 50, opacity: 0, duration: .9, ease: 'power3.out', delay: .15
-    });
-
-    /* ── BOOKING ── */
-    const bookingInfo = document.querySelector('.booking-info');
-    if (bookingInfo) gsap.from(bookingInfo.children, {
-      scrollTrigger: { trigger: '#reservar', start: 'top 75%' },
-      x: -50, opacity: 0, duration: .8, stagger: .12, ease: 'power3.out'
-    });
-    gsap.from('.booking-form', {
-      scrollTrigger: { trigger: '#reservar', start: 'top 75%' },
-      y: 60, opacity: 0, duration: 1, ease: 'power3.out', delay: .2
-    });
-    gsap.from('.booking-feature', {
-      scrollTrigger: { trigger: '.booking-features', start: 'top 85%' },
-      x: -25, opacity: 0, duration: .55, stagger: .1, ease: 'power2.out'
-    });
-
-    /* ── FAQ ── */
-    const faqText = document.querySelector('.faq-text');
-    if (faqText) gsap.from(faqText.children, {
-      scrollTrigger: { trigger: '#faq', start: 'top 80%' },
-      y: 30, opacity: 0, duration: .7, stagger: .12, ease: 'power3.out'
-    });
-    gsap.from('.faq-item', {
-      scrollTrigger: { trigger: '.faq-list', start: 'top 85%' },
-      y: 25, opacity: 0, duration: .6, stagger: .1, ease: 'power2.out'
-    });
-
-    /* ── FOOTER ── */
-    const footerGrid = document.querySelector('footer .footer-grid');
-    if (footerGrid) gsap.from(footerGrid.children, {
-      scrollTrigger: { trigger: 'footer', start: 'top 90%' },
-      y: 30, opacity: 0, duration: .7, stagger: .15, ease: 'power2.out'
-    });
-
-    /* ── PARALLAX HERO CIRCLE ── */
-    gsap.to('.hero-bg-circle', {
-      scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: 1.5 },
-      y: 120, scale: 1.08, ease: 'none'
-    });
-
-    /* ── COUNTER ── */
-    ScrollTrigger.create({
-      trigger: '.hero-stat', start: 'top 90%', once: true,
-      onEnter: () => {
-        const el = document.querySelector('.hero-stat .num');
-        gsap.fromTo({ val: 0 }, { val: 500 }, {
-          duration: 1.8, ease: 'power2.out',
-          onUpdate: function() { el.textContent = Math.round(this.targets()[0].val) + '+'; }
-        });
-      }
-    });
-
-    /* ── SERVICE CARD HOVER ── */
-    document.querySelectorAll('.service-card').forEach(card => {
-      const img = card.querySelector('.service-img');
-      if (!img) return;
-      card.addEventListener('mouseenter', () => gsap.to(img, { scale: 1.07, duration: .5, ease: 'power2.out' }));
-      card.addEventListener('mouseleave', () => gsap.to(img, { scale: 1, duration: .5, ease: 'power2.out' }));
-    });
-
-    /* ── NAV HOVER ── */
-    document.querySelectorAll('.nav-links a').forEach(link => {
-      link.addEventListener('mouseenter', () => gsap.to(link, { y: -2, duration: .2, ease: 'power2.out' }));
-      link.addEventListener('mouseleave', () => gsap.to(link, { y:  0, duration: .2, ease: 'power2.out' }));
-    });
-
-    /* ── SUBMIT PULSE ── */
-    const submitBtn = document.getElementById('submit-btn');
-    if (submitBtn) gsap.to(submitBtn, {
-      boxShadow: '0 0 0 8px rgba(143,166,138,0)',
-      repeat: -1, duration: 2, ease: 'power1.inOut', yoyo: true
-    });
-  /* ═══════════════════════════════════════
-     CUSTOM CURSOR
-  ════════════════════════════════════════ */
-  const cursorDot  = document.getElementById('cursor-dot');
-  const cursorRing = document.getElementById('cursor-ring');
-
-  if (window.matchMedia('(pointer: fine)').matches) {
-    document.body.classList.add('no-cursor');
-    let mouseX = 0, mouseY = 0;
-    let ringX  = 0, ringY  = 0;
-
-    window.addEventListener('mousemove', e => {
-      mouseX = e.clientX; mouseY = e.clientY;
-      gsap.to(cursorDot, { x: mouseX, y: mouseY, duration: .08, ease: 'none' });
-    });
-
-    gsap.ticker.add(() => {
-      ringX += (mouseX - ringX) * .12;
-      ringY += (mouseY - ringY) * .12;
-      gsap.set(cursorRing, { x: ringX, y: ringY });
-    });
-
-    document.querySelectorAll('a, button, .service-card, .gallery-item, .cal-day, .slot').forEach(el => {
-      el.addEventListener('mouseenter', () => cursorRing.classList.add('hover'));
-      el.addEventListener('mouseleave', () => cursorRing.classList.remove('hover'));
-    });
-
-    document.addEventListener('mouseleave', () => {
-      gsap.to([cursorDot, cursorRing], { opacity: 0, duration: .2 });
-    });
-    document.addEventListener('mouseenter', () => {
-      gsap.to([cursorDot, cursorRing], { opacity: 1, duration: .2 });
-    });
-  }
-
-  /* ════════════════════════════════════════
-     DARK MODE TOGGLE
-  ════════════════════════════════════════ */
+  /* ── APPLY SAVED THEME ── */
+  const savedTheme = localStorage.getItem('theme') || 'light';
+  document.documentElement.setAttribute('data-theme', savedTheme);
   const themeBtn = document.getElementById('theme-toggle');
-  const saved    = localStorage.getItem('theme');
-  if (saved) document.documentElement.setAttribute('data-theme', saved);
-  if (saved === 'dark') themeBtn.textContent = '☀️';
+  if (themeBtn) themeBtn.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
 
-  themeBtn.addEventListener('click', () => {
-    document.documentElement.classList.add('theme-transitioning');
-    setTimeout(() => document.documentElement.classList.remove('theme-transitioning'), 400);
-    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-    const next   = isDark ? 'light' : 'dark';
-    document.documentElement.setAttribute('data-theme', next);
-    localStorage.setItem('theme', next);
-    themeBtn.textContent = next === 'dark' ? '☀️' : '🌙';
-    gsap.from(themeBtn, { rotation: -180, duration: .5, ease: 'back.out(1.4)' });
-  });
-
-  /* ════════════════════════════════════════
-     NAV SCROLL
-  ════════════════════════════════════════ */
+  /* ── NAV SCROLL ── */
   window.addEventListener('scroll', () => {
     document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 30);
   });
 
-  /* ════════════════════════════════════════
-     HAMBURGER MENU
-  ════════════════════════════════════════ */
+  /* ── DARK MODE TOGGLE ── */
+  if (themeBtn) {
+    themeBtn.addEventListener('click', () => {
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      const next   = isDark ? 'light' : 'dark';
+      document.documentElement.classList.add('theme-transitioning');
+      setTimeout(() => document.documentElement.classList.remove('theme-transitioning'), 500);
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+      themeBtn.textContent = next === 'dark' ? '☀️' : '🌙';
+      gsap.timeline()
+        .to(themeBtn, { scale: .8, duration: .12, ease: 'power2.in' })
+        .to(themeBtn, { scale: 1,  duration: .4,  ease: 'back.out(2)' });
+    });
+  }
+
+  /* ── MOBILE DRAWER ── */
   const hamburger = document.getElementById('hamburger');
   const drawer    = document.getElementById('nav-drawer');
-
-  window.openDrawer = function() {
+  function openDrawer()  {
+    if (!hamburger || !drawer) return;
     hamburger.classList.add('open');
     drawer.classList.add('open');
     document.body.style.overflow = 'hidden';
-    gsap.from('.nav-drawer-panel a, .nav-drawer-panel .drawer-cta', {
-      x: 30, opacity: 0, duration: .4, stagger: .07, ease: 'power2.out', delay: .15
-    });
   }
-  window.closeDrawer = function() {
+  function closeDrawer() {
+    if (!hamburger || !drawer) return;
     hamburger.classList.remove('open');
     drawer.classList.remove('open');
     document.body.style.overflow = '';
   }
-  hamburger.addEventListener('click', () => {
-    if (drawer.classList.contains('open')) window.closeDrawer(); else window.openDrawer();
+  window.closeDrawer = closeDrawer;
+  if (hamburger) hamburger.addEventListener('click', () => {
+    hamburger.classList.contains('open') ? closeDrawer() : openDrawer();
   });
-  drawer.addEventListener('click', e => {
-    if (!e.target.closest('.nav-drawer-panel')) window.closeDrawer();
-  });
-  window.addEventListener('resize', () => { if (window.innerWidth > 768) window.closeDrawer(); });
+  if (drawer) drawer.addEventListener('click', e => { if (e.target === drawer) closeDrawer(); });
 
-  /* ════════════════════════════════════════
-     GALLERY LIGHTBOX
-  ════════════════════════════════════════ */
-  const galleryImgs = [
-    'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=1400&q=90&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=1200&q=90&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=1200&q=90&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=1200&q=90&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1604014237800-1c9102c219da?w=1400&q=90&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=1200&q=90&auto=format&fit=crop'
-  ];
-  let lbIndex = 0;
-  const lightbox = document.getElementById('lightbox');
-  const lbImg    = document.getElementById('lb-img');
-
-  window.openLightbox = function(i) {
-    lbIndex = i;
-    lbImg.src = galleryImgs[i];
-    lightbox.classList.add('open');
-    document.body.style.overflow = 'hidden';
-  }
-  window.closeLightbox = function() {
-    lightbox.classList.remove('open');
-    document.body.style.overflow = '';
-  }
-  window.lbNav = function(dir) {
-    lbIndex = (lbIndex + dir + galleryImgs.length) % galleryImgs.length;
-    gsap.to(lbImg, { opacity: 0, x: dir * 40, duration: .2, ease: 'power2.in', onComplete: () => {
-      lbImg.src = galleryImgs[lbIndex];
-      gsap.fromTo(lbImg, { opacity: 0, x: -dir * 40 }, { opacity: 1, x: 0, duration: .3, ease: 'power2.out' });
-    }});
-  }
-  lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
-  document.addEventListener('keydown', e => {
-    if (!lightbox.classList.contains('open')) return;
-    if (e.key === 'Escape') closeLightbox();
-    if (e.key === 'ArrowRight') lbNav(1);
-    if (e.key === 'ArrowLeft')  lbNav(-1);
-  });
-
-  /* ════════════════════════════════════════
-     INTERACTIVE CALENDAR
-  ════════════════════════════════════════ */
-  const MONTHS = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
-  const ALL_SLOTS = ['09:00','10:00','11:00','12:00','15:00','16:00','17:00','18:00','19:00'];
-  const TAKEN_MAP = { 1:[0,2,5], 2:[1,3,6], 3:[0,4,7], 5:[2,5,8], 8:[1,3,6], 10:[0,4,7], 12:[2,5], 15:[1,6,8], 18:[0,3,7], 20:[2,4,8], 22:[1,5], 25:[0,3,6] };
-
-  let calDate = new Date();
-  let selDay  = null;
-  let selSlot = null;
-
-  window.calNav = function(dir) {
-    calDate.setMonth(calDate.getMonth() + dir);
-    renderCal();
-    selDay = null; selSlot = null;
-    document.getElementById('time-slots').style.display = 'none';
-    updateConfirmBtn();
-  }
-
-  function renderCal() {
-    const y = calDate.getFullYear(), m = calDate.getMonth();
-    document.getElementById('cal-month-label').textContent = MONTHS[m] + ' ' + y;
-    const first = new Date(y, m, 1).getDay();
-    const days  = new Date(y, m + 1, 0).getDate();
-    const today = new Date();
-    const grid  = document.getElementById('cal-days');
-    grid.innerHTML = '';
-
-    for (let i = 0; i < first; i++) {
-      const el = document.createElement('div');
-      el.className = 'cal-day empty'; grid.appendChild(el);
-    }
-    for (let d = 1; d <= days; d++) {
-      const el   = document.createElement('div');
-      const date = new Date(y, m, d);
-      const dow  = date.getDay();
-      const past = date < new Date(today.getFullYear(), today.getMonth(), today.getDate());
-      const isToday = date.toDateString() === today.toDateString();
-      const isSun = dow === 0;
-      el.className = 'cal-day';
-      el.textContent = d;
-      if (past || isSun) { el.classList.add('disabled'); }
-      else {
-        el.classList.add('available');
-        el.addEventListener('click', () => selectDay(d, el));
-      }
-      if (isToday) el.classList.add('today');
-      if (selDay === d) el.classList.add('selected');
-      grid.appendChild(el);
-    }
-  }
-
-  function selectDay(d, el) {
-    document.querySelectorAll('.cal-day').forEach(x => x.classList.remove('selected'));
-    el.classList.add('selected');
-    selDay = d; selSlot = null;
-    renderSlots(d);
-    updateConfirmBtn();
-    gsap.from('#time-slots', { y: 15, opacity: 0, duration: .4, ease: 'power2.out' });
-  }
-
-  function renderSlots(d) {
-    const slotsWrap = document.getElementById('time-slots');
-    const grid      = document.getElementById('slots-grid');
-    slotsWrap.style.display = 'block';
-    grid.innerHTML = '';
-    const taken = TAKEN_MAP[d] || [];
-    ALL_SLOTS.forEach((s, i) => {
-      const el = document.createElement('div');
-      el.className = 'slot' + (taken.includes(i) ? ' taken' : '');
-      el.textContent = s;
-      if (!taken.includes(i)) {
-        el.addEventListener('click', () => selectSlot(s, el));
-      }
-      grid.appendChild(el);
+  /* ── CUSTOM CURSOR ── */
+  if (window.matchMedia('(pointer: fine)').matches) {
+    document.body.classList.add('no-cursor');
+    const dot  = document.getElementById('cursor-dot');
+    const ring = document.getElementById('cursor-ring');
+    let mx = 0, my = 0, rx = 0, ry = 0;
+    window.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+    gsap.ticker.add(() => {
+      if (dot)  gsap.set(dot,  { x: mx, y: my });
+      rx += (mx - rx) * 0.12;
+      ry += (my - ry) * 0.12;
+      if (ring) gsap.set(ring, { x: rx, y: ry });
+    });
+    document.querySelectorAll('a, button, .service-card, .faq-q, .pay-btn').forEach(el => {
+      el.addEventListener('mouseenter', () => ring && ring.classList.add('hover'));
+      el.addEventListener('mouseleave', () => ring && ring.classList.remove('hover'));
     });
   }
 
-  function selectSlot(s, el) {
-    document.querySelectorAll('.slot').forEach(x => x.classList.remove('selected-slot'));
-    el.classList.add('selected-slot');
-    selSlot = s;
-    updateConfirmBtn();
-    gsap.from(el, { scale: .9, duration: .25, ease: 'back.out(1.8)' });
-  }
+  /* ── HERO ENTRANCE ── */
+  const heroTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+  heroTl
+    .from('nav',             { y: -60, opacity: 0, duration: .9 })
+    .from('.hero-tag',       { y: 30,  opacity: 0, duration: .7 }, '-=.4')
+    .from('#hero h1',        { y: 50,  opacity: 0, duration: .9 }, '-=.5')
+    .from('.hero-desc',      { y: 30,  opacity: 0, duration: .7 }, '-=.5')
+    .from('.hero-btns a',    { y: 20,  opacity: 0, duration: .6, stagger: .15 }, '-=.4')
+    .from('.hero-img img',   { scale: 1.08, opacity: 0, duration: 1.1, ease: 'power2.out' }, '-=.8')
+    .from('.hero-badge',     { x: -40, opacity: 0, duration: .7, ease: 'back.out(1.4)' }, '-=.4')
+    .from('.hero-stat',      { x: 40,  opacity: 0, duration: .7, ease: 'back.out(1.4)' }, '-=.6')
+    .from('.hero-bg-circle', { scale: .7, opacity: 0, duration: 1.4, ease: 'power2.out' }, 0);
 
-  function updateConfirmBtn() {
-    const btn = document.getElementById('cal-confirm');
-    if (selDay && selSlot) {
-      btn.disabled = false;
-      btn.textContent = 'Reservar — ' + selDay + ' a las ' + selSlot;
-    } else if (selDay) {
-      btn.disabled = true;
-      btn.textContent = 'Seleccioná un horario';
-    } else {
-      btn.disabled = true;
-      btn.textContent = 'Seleccioná un día y horario';
+  gsap.from('.strip', { opacity: 0, y: 20, duration: .8, delay: 1.2, ease: 'power2.out' });
+
+  /* ── PARALLAX hero circle ── */
+  gsap.to('.hero-bg-circle', {
+    scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: 1.5 },
+    y: 120, scale: 1.08, ease: 'none'
+  });
+
+  /* ── COUNTER 500+ ── */
+  ScrollTrigger.create({
+    trigger: '.hero-stat', start: 'top 90%', once: true,
+    onEnter: () => {
+      const el = document.querySelector('.hero-stat .num');
+      if (!el) return;
+      gsap.fromTo({ val: 0 }, { val: 500 }, {
+        duration: 1.8, ease: 'power2.out',
+        onUpdate: function() { el.textContent = Math.round(this.targets()[0].val) + '+'; }
+      });
     }
+  });
+
+  /* ── ABOUT ── */
+  gsap.from('.about-img-wrap img', {
+    scrollTrigger: { trigger: '#about', start: 'top 80%' },
+    clipPath: 'inset(100% 0% 0% 0%)', duration: 1.1, ease: 'power3.out'
+  });
+  gsap.from('.about-quote', {
+    scrollTrigger: { trigger: '#about', start: 'top 65%' },
+    scale: .8, opacity: 0, duration: .8, ease: 'back.out(1.6)', delay: .4
+  });
+  const aboutText = document.querySelector('.about-text');
+  if (aboutText) {
+    gsap.from(aboutText.children, {
+      scrollTrigger: { trigger: '#about', start: 'top 75%' },
+      y: 40, opacity: 0, duration: .8, stagger: .12, ease: 'power3.out'
+    });
+  }
+  gsap.from('.credential-item', {
+    scrollTrigger: { trigger: '.credentials', start: 'top 85%' },
+    x: -30, opacity: 0, duration: .6, stagger: .1, ease: 'power2.out'
+  });
+
+  /* ── SERVICES ── */
+  gsap.from('.services-header > *', {
+    scrollTrigger: { trigger: '#services', start: 'top 80%' },
+    y: 30, opacity: 0, duration: .7, stagger: .15, ease: 'power3.out'
+  });
+  gsap.from('.service-card', {
+    scrollTrigger: { trigger: '.services-grid', start: 'top 80%' },
+    y: 60, opacity: 0, duration: .75, stagger: { amount: .7, from: 'start' }, ease: 'power3.out'
+  });
+  document.querySelectorAll('.service-card').forEach(card => {
+    const img = card.querySelector('.service-img');
+    if (!img) return;
+    card.addEventListener('mouseenter', () => gsap.to(img, { scale: 1.07, duration: .5, ease: 'power2.out' }));
+    card.addEventListener('mouseleave', () => gsap.to(img, { scale: 1,    duration: .5, ease: 'power2.out' }));
+  });
+
+  /* ── HOW ── */
+  gsap.from('.step', {
+    scrollTrigger: { trigger: '.how-steps', start: 'top 80%' },
+    x: -50, opacity: 0, duration: .7, stagger: .18, ease: 'power3.out'
+  });
+  gsap.from('.how-img img', {
+    scrollTrigger: { trigger: '.how-grid', start: 'top 75%' },
+    scale: 1.06, opacity: 0, duration: 1.1, ease: 'power2.out'
+  });
+  gsap.from('.how-img-overlay', {
+    scrollTrigger: { trigger: '.how-img', start: 'top 70%' },
+    x: -40, opacity: 0, duration: .8, ease: 'back.out(1.4)', delay: .4
+  });
+
+  /* ── TESTIMONIALS ── */
+  gsap.from('.test-card', {
+    scrollTrigger: { trigger: '.test-grid', start: 'top 80%' },
+    y: 50, opacity: 0, rotation: 2, duration: .75,
+    stagger: { amount: .5, from: 'start' }, ease: 'power3.out'
+  });
+
+  /* ── BOOKING ── */
+  const bookingInfo = document.querySelector('.booking-info');
+  if (bookingInfo) {
+    gsap.from(bookingInfo.children, {
+      scrollTrigger: { trigger: '#reservar', start: 'top 75%' },
+      x: -50, opacity: 0, duration: .8, stagger: .12, ease: 'power3.out'
+    });
+  }
+  gsap.from('.booking-form', {
+    scrollTrigger: { trigger: '#reservar', start: 'top 75%' },
+    y: 60, opacity: 0, duration: 1, ease: 'power3.out', delay: .2
+  });
+  gsap.from('.booking-feature', {
+    scrollTrigger: { trigger: '.booking-features', start: 'top 85%' },
+    x: -25, opacity: 0, duration: .55, stagger: .1, ease: 'power2.out'
+  });
+
+  /* ── FAQ ── */
+  const faqText = document.querySelector('.faq-text');
+  if (faqText) {
+    gsap.from(faqText.children, {
+      scrollTrigger: { trigger: '#faq', start: 'top 80%' },
+      y: 30, opacity: 0, duration: .7, stagger: .12, ease: 'power3.out'
+    });
+  }
+  gsap.from('.faq-item', {
+    scrollTrigger: { trigger: '.faq-list', start: 'top 85%' },
+    y: 25, opacity: 0, duration: .6, stagger: .1, ease: 'power2.out'
+  });
+
+  /* ── FOOTER ── */
+  const footerGrid = document.querySelector('footer .footer-grid');
+  if (footerGrid) {
+    gsap.from(footerGrid.children, {
+      scrollTrigger: { trigger: 'footer', start: 'top 90%' },
+      y: 30, opacity: 0, duration: .7, stagger: .15, ease: 'power2.out'
+    });
   }
 
-  window.calConfirm = function() {
-    const m    = MONTHS[calDate.getMonth()];
-    const y    = calDate.getFullYear();
-    const mo   = String(calDate.getMonth() + 1).padStart(2, '0');
-    const d    = String(selDay).padStart(2, '0');
-    const dateStr = y + '-' + mo + '-' + d;   // formato YYYY-MM-DD para input[type=date]
+  /* ── NAV LINK HOVER ── */
+  document.querySelectorAll('.nav-links a').forEach(link => {
+    link.addEventListener('mouseenter', () => gsap.to(link, { y: -2, duration: .2 }));
+    link.addEventListener('mouseleave', () => gsap.to(link, { y:  0, duration: .2 }));
+  });
 
-    gsap.to('.cal-box', { scale: .98, duration: .15, yoyo: true, repeat: 1 });
-
-    setTimeout(() => {
-      // ── Rellenar el campo fecha del formulario ──
-      const dateInput = document.getElementById('date');
-      if (dateInput) {
-        dateInput.value = dateStr;
-        // Disparar evento change por si hay listeners
-        dateInput.dispatchEvent(new Event('change', { bubbles: true }));
-        // Highlight visual para que el usuario note el cambio
-        gsap.fromTo(dateInput,
-          { borderColor: 'var(--sage)', boxShadow: '0 0 0 3px rgba(143,166,138,.35)' },
-          { borderColor: '', boxShadow: '', duration: 1.5, delay: .5, ease: 'power2.out' }
-        );
-      }
-
-      // ── Rellenar el campo horario del formulario ──
-      const timeSelect = document.getElementById('time');
-      if (timeSelect) {
-        // Buscar la opción que coincida con el slot seleccionado
-        for (let opt of timeSelect.options) {
-          if (opt.value === selSlot || opt.text === selSlot) {
-            opt.selected = true;
-            break;
-          }
-        }
-        timeSelect.dispatchEvent(new Event('change', { bubbles: true }));
-        gsap.fromTo(timeSelect,
-          { borderColor: 'var(--sage)', boxShadow: '0 0 0 3px rgba(143,166,138,.35)' },
-          { borderColor: '', boxShadow: '', duration: 1.5, delay: .6, ease: 'power2.out' }
-        );
-      }
-
-      // ── Scroll al formulario con mensaje de confirmación ──
-      const reservarSection = document.getElementById('reservar');
-      if (reservarSection) {
-        reservarSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-
-      // ── Toast de confirmación (en lugar del alert) ──
-      showToast('📅 ' + selDay + ' de ' + m + ' a las ' + selSlot + 'hs — ya completado en el formulario');
-    }, 300);
+  /* ── SUBMIT BUTTON PULSE ── */
+  const submitBtn = document.getElementById('submit-btn');
+  if (submitBtn) {
+    gsap.to(submitBtn, {
+      boxShadow: '0 0 0 8px rgba(143,166,138,0)',
+      repeat: -1, duration: 2, ease: 'power1.inOut', yoyo: true
+    });
   }
 
-  // ── Toast notification ──
-  function showToast(msg) {
-    let toast = document.getElementById('cal-toast');
-    if (!toast) {
-      toast = document.createElement('div');
-      toast.id = 'cal-toast';
-      toast.style.position      = 'fixed';
-      toast.style.bottom         = '6rem';
-      toast.style.left           = '50%';
-      toast.style.transform      = 'translateX(-50%) translateY(20px)';
-      toast.style.background     = '#2A2A2A';
-      toast.style.color          = '#fff';
-      toast.style.padding        = '.85rem 1.6rem';
-      toast.style.borderRadius   = '40px';
-      toast.style.fontFamily     = "'Jost', sans-serif";
-      toast.style.fontSize       = '.88rem';
-      toast.style.fontWeight     = '400';
-      toast.style.boxShadow      = '0 8px 30px rgba(0,0,0,.25)';
-      toast.style.zIndex         = '1000';
-      toast.style.opacity        = '0';
-      toast.style.whiteSpace     = 'nowrap';
-      toast.style.pointerEvents  = 'none';
-      document.body.appendChild(toast);
-    }
-    toast.textContent = msg;
-    gsap.killTweensOf(toast);
-    gsap.timeline()
-      .to(toast, { opacity: 1, y: 0, duration: .35, ease: 'back.out(1.4)',
-                   onStart: () => { toast.style.transform = 'translateX(-50%) translateY(20px)'; } })
-      .to(toast, { opacity: 0, y: -10, duration: .4, ease: 'power2.in', delay: 3 });
-  }
-
-  renderCal();
-
-  /* ════════════════════════════════════════
-     FORM UTILITIES
-  ════════════════════════════════════════ */
+  /* ── FAQ TOGGLE ── */
   window.toggleFaq = function(btn) {
     const item = btn.parentElement;
     const open = item.classList.contains('open');
     document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
     if (!open) item.classList.add('open');
-  }
+  };
 
+  /* ── PAYMENT ── */
   let selectedPay = '';
   window.selectPay = function(btn, method) {
     document.querySelectorAll('.pay-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     selectedPay = method;
-    const cardFields = document.getElementById('card-fields');
-    const mpInfo     = document.getElementById('mp-info');
-    if (method === 'card') { cardFields.classList.add('show'); mpInfo.classList.remove('show'); }
-    else if (method === 'mp') { mpInfo.classList.add('show'); cardFields.classList.remove('show'); }
-    else { cardFields.classList.remove('show'); mpInfo.classList.remove('show'); }
-  }
+    document.getElementById('card-fields').classList.toggle('show', method === 'card');
+    document.getElementById('mp-info').classList.toggle('show', method === 'mp');
+    if (method !== 'card') document.getElementById('card-fields').classList.remove('show');
+    if (method !== 'mp')   document.getElementById('mp-info').classList.remove('show');
+  };
 
   window.formatCard = function(input) {
     let v = input.value.replace(/\D/g, '').substring(0, 16);
     input.value = v.replace(/(.{4})/g, '$1 ').trim();
-  }
+  };
   window.formatExp = function(input) {
     let v = input.value.replace(/\D/g, '').substring(0, 4);
     if (v.length >= 2) v = v.substring(0,2) + '/' + v.substring(2);
     input.value = v;
-  }
+  };
 
-  document.getElementById('date').min = new Date().toISOString().split('T')[0];
+  const dateInput = document.getElementById('date');
+  if (dateInput) dateInput.min = new Date().toISOString().split('T')[0];
 
+  /* ── SUBMIT FORM ── */
   window.submitForm = function() {
     const required = ['fname','lname','email','phone','session-type','modality','date','time'];
-    const missing  = required.filter(id => !document.getElementById(id).value);
+    const missing = required.filter(id => !document.getElementById(id).value);
     if (missing.length) { alert('Por favor completá todos los campos requeridos.'); return; }
     if (!selectedPay)   { alert('Seleccioná un método de pago para continuar.'); return; }
     const btn = document.getElementById('submit-btn');
@@ -2577,63 +1887,12 @@ gsap.registerPlugin(ScrollTrigger);
     setTimeout(() => {
       if (selectedPay === 'mp') {
         btn.textContent = 'Redirigiendo a Mercado Pago…';
-        setTimeout(() => { showSuccess(); sendWhatsApp(); }, 1500);
-      } else {
-        showSuccess();
-        sendWhatsApp();
-      }
+        setTimeout(() => showSuccess(), 1500);
+      } else { showSuccess(); }
     }, 1200);
-  }
+  };
 
-  function sendWhatsApp() {
-    // Recolectar datos del formulario
-    const nombre   = document.getElementById('fname').value + ' ' + document.getElementById('lname').value;
-    const email    = document.getElementById('email').value;
-    const telefono = document.getElementById('phone').value;
-    const tipo     = document.getElementById('session-type').value;
-    const modalidad= document.getElementById('modality').value;
-    const fecha    = document.getElementById('date').value;
-    const horario  = document.getElementById('time').value;
-    const mensaje  = document.getElementById('message').value;
-
-    // Formatear fecha legible
-    const [anio, mes, dia] = fecha.split('-');
-    const meses = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
-    const fechaLegible = `${dia} de ${meses[parseInt(mes)-1]} de ${anio}`;
-
-    // Métodos de pago
-    const pagoMap = { mp: 'Mercado Pago', card: 'Tarjeta de crédito/débito', later: 'Pago en consultorio' };
-    const pago = pagoMap[selectedPay] || selectedPay;
-
-    // Armar el mensaje
-    const texto = [
-      '🌿 *Nueva reserva recibida*',
-      '',
-      `👤 *Paciente:* ${nombre}`,
-      `📧 *Email:* ${email}`,
-      `📱 *Teléfono:* ${telefono}`,
-      '',
-      `📋 *Tipo de sesión:* ${tipo}`,
-      `💻 *Modalidad:* ${modalidad}`,
-      `📅 *Fecha:* ${fechaLegible}`,
-      `🕐 *Horario:* ${horario} hs`,
-      `💳 *Método de pago:* ${pago}`,
-      mensaje ? `
-💬 *Mensaje:* ${mensaje}` : '',
-      '',
-      '---',
-      '📲 Reserva recibida desde tu sitio web'
-    ].filter(l => l !== undefined).join('\n');
-
-    // Número de la psicóloga — reemplazar con el número real
-    const numeroWA = '5491100000000';
-    const url = `https://wa.me/${numeroWA}?text=${encodeURIComponent(texto)}`;
-
-    // Abrir WhatsApp en nueva pestaña con pequeño delay para no bloquear la animación
-    setTimeout(() => window.open(url, '_blank'), 800);
-  }
-
-  window.showSuccess = function() {
+  function showSuccess() {
     const content = document.getElementById('form-content');
     const msg     = document.getElementById('success-msg');
     gsap.to(content, { opacity: 0, y: -20, duration: .4, ease: 'power2.in', onComplete: () => {
@@ -2642,6 +1901,141 @@ gsap.registerPlugin(ScrollTrigger);
       gsap.from(msg, { opacity: 0, y: 30, scale: .95, duration: .7, ease: 'back.out(1.4)' });
     }});
   }
+
+  /* ── CALENDAR ── */
+  const TAKEN_MAP = {
+    1: ['09:00','11:00'], 3: ['10:00','14:00'], 5: ['16:00'],
+    7: ['09:00','17:00'], 10: ['11:00','13:00'], 12: ['10:00','15:00'],
+    14: ['09:00'], 17: ['12:00','16:00'], 19: ['11:00'],
+    21: ['09:00','10:00'], 24: ['14:00'], 26: ['11:00','17:00']
+  };
+  const SLOTS = ['09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00'];
+  let calDate = new Date(); calDate.setDate(1);
+  let selDay = null, selSlot = null;
+
+  window.calNav = function(dir) {
+    calDate.setMonth(calDate.getMonth() + dir);
+    selDay = null; selSlot = null;
+    renderCal();
+  };
+
+  function renderCal() {
+    const grid  = document.getElementById('cal-grid');
+    const title = document.getElementById('cal-month-title');
+    const slots = document.getElementById('cal-slots');
+    const confBtn = document.getElementById('cal-confirm-btn');
+    if (!grid) return;
+
+    const year = calDate.getFullYear(), month = calDate.getMonth();
+    const months = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+    title.textContent = months[month] + ' ' + year;
+
+    const today = new Date(); today.setHours(0,0,0,0);
+    const firstDay = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const offset = (firstDay + 6) % 7;
+
+    let html = '';
+    for (let i = 0; i < offset; i++) html += '<div class="cal-day empty"></div>';
+    for (let d = 1; d <= daysInMonth; d++) {
+      const dt = new Date(year, month, d);
+      const isPast = dt < today;
+      const isSun  = dt.getDay() === 0;
+      const isToday = dt.toDateString() === today.toDateString();
+      const isSel  = selDay === d;
+      const hasDot = !isPast && !isSun && TAKEN_MAP[d]?.length < SLOTS.length;
+      let cls = 'cal-day';
+      if (isPast || isSun) cls += ' disabled';
+      if (isToday) cls += ' today';
+      if (isSel)   cls += ' selected';
+      html += `<div class="${cls}" onclick="calSelectDay(${d})">${d}${hasDot && !isPast && !isSun ? '<span class="cal-dot"></span>' : ''}</div>`;
+    }
+    grid.innerHTML = html;
+
+    // Render slots
+    if (selDay) {
+      const taken = TAKEN_MAP[selDay] || [];
+      let shtml = '<div class="cal-slots-label">Horarios disponibles</div><div class="cal-slots-grid">';
+      SLOTS.forEach(sl => {
+        const isTaken = taken.includes(sl);
+        const isSel   = selSlot === sl;
+        shtml += `<button class="slot${isTaken ? ' taken' : ''}${isSel ? ' selected' : ''}" onclick="calSelectSlot('${sl}')" ${isTaken ? 'disabled' : ''}>${sl}</button>`;
+      });
+      shtml += '</div>';
+      slots.innerHTML = shtml;
+      slots.style.display = 'block';
+    } else {
+      slots.innerHTML = '';
+      slots.style.display = 'none';
+    }
+
+    if (confBtn) {
+      confBtn.disabled = !(selDay && selSlot);
+      confBtn.style.opacity = (selDay && selSlot) ? '1' : '0.45';
+    }
+  }
+
+  window.calSelectDay = function(d) {
+    const today = new Date(); today.setHours(0,0,0,0);
+    const dt = new Date(calDate.getFullYear(), calDate.getMonth(), d);
+    if (dt < today || dt.getDay() === 0) return;
+    selDay = d; selSlot = null;
+    renderCal();
+  };
+
+  window.calSelectSlot = function(slot) {
+    selSlot = slot;
+    renderCal();
+  };
+
+  window.calConfirm = function() {
+    if (!selDay || !selSlot) return;
+    const months = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+    const dateStr = `${selDay} de ${months[calDate.getMonth()]} de ${calDate.getFullYear()}`;
+    const pad = n => String(n).padStart(2, '0');
+    const isoDate = `${calDate.getFullYear()}-${pad(calDate.getMonth()+1)}-${pad(selDay)}`;
+
+    const dateInput = document.getElementById('date');
+    const timeInput = document.getElementById('time');
+    if (dateInput) { dateInput.value = isoDate; gsap.fromTo(dateInput, { borderColor: '#8FA68A', boxShadow: '0 0 0 3px rgba(143,166,138,.3)' }, { borderColor: '', boxShadow: 'none', duration: 1.5, delay: .3 }); }
+    if (timeInput) { for (let opt of timeInput.options) { if (opt.text === selSlot) { opt.selected = true; break; } } }
+
+    // Show toast
+    const existing = document.getElementById('cal-toast');
+    if (existing) existing.remove();
+    const toast = document.createElement('div');
+    toast.id = 'cal-toast';
+    toast.style.cssText = 'position:fixed;bottom:6rem;left:50%;transform:translateX(-50%);background:#8FA68A;color:#fff;padding:.85rem 1.6rem;border-radius:40px;font-family:Jost,sans-serif;font-size:.9rem;font-weight:500;z-index:9999;white-space:nowrap;box-shadow:0 8px 28px rgba(0,0,0,.2);';
+    toast.textContent = '✓ Turno reservado: ' + dateStr + ' a las ' + selSlot;
+    document.body.appendChild(toast);
+    gsap.from(toast, { y: 30, opacity: 0, duration: .5, ease: 'back.out(1.4)' });
+    setTimeout(() => { gsap.to(toast, { opacity: 0, y: -10, duration: .4, onComplete: () => toast.remove() }); }, 3500);
+
+    document.getElementById('reservar').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+  // Init calendar
+  renderCal();
+
+  /* ── WHATSAPP SEND ON SUBMIT ── */
+  window.sendWhatsApp = function() {
+    const numero = '5491100000000';
+    const get = id => { const el = document.getElementById(id); return el ? el.value : ''; };
+    const msg = encodeURIComponent(
+      'Hola Valentina! Acabo de hacer una reserva:\n' +
+      '👤 ' + get('fname') + ' ' + get('lname') + '\n' +
+      '📧 ' + get('email') + '\n' +
+      '📱 ' + get('phone') + '\n' +
+      '🗓 Sesión: ' + get('session-type') + '\n' +
+      '💻 Modalidad: ' + get('modality') + '\n' +
+      '📅 Fecha: ' + get('date') + '\n' +
+      '⏰ Horario: ' + get('time') + '\n' +
+      (get('message') ? '💬 ' + get('message') : '')
+    );
+    window.open('https://wa.me/' + numero + '?text=' + msg, '_blank');
+  };
+
 </script>
+
 </body>
 </html>
