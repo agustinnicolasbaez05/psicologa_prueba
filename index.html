@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dra. Valentina Ríos — Psicóloga Clínica</title>
+
+  <!-- Preconnects -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://images.unsplash.com" />
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+
+  <!-- Anti-FOUC: apply saved theme before first paint -->
+  <script>
+    (function(){
+      var t = localStorage.getItem('theme');
+      if (t) document.documentElement.setAttribute('data-theme', t);
+    })();
+  </script>
+
+  <!-- GSAP (must load before main.js) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body>
+
+<!-- CURSOR -->
+<div class="cursor-dot"  id="cursor-dot"></div>
+<div class="cursor-ring" id="cursor-ring"></div>
+
+<!-- DARK MODE TOGGLE -->
+<button class="theme-toggle" id="theme-toggle" aria-label="Cambiar tema">🌙</button>
+
+<!-- WHATSAPP FLOAT -->
+<a class="wa-float" href="https://wa.me/5491100000000?text=Hola%20Valentina%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20una%20sesi%C3%B3n" target="_blank" rel="noopener">
+  <div class="wa-pulse"></div>
+  <span class="wa-icon">💬</span>
+  <span class="wa-label">Escribime por WhatsApp</span>
+</a>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox">
+  <button class="lb-close" onclick="closeLightbox()">✕</button>
+  <button class="lb-nav lb-prev" onclick="lbNav(-1)">‹</button>
+  <img id="lb-img" src="" alt="" />
+  <button class="lb-nav lb-next" onclick="lbNav(1)">›</button>
+</div>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#" class="nav-logo">Dra. Valentina <span>Ríos</span></a>
+  <ul class="nav-links">
+    <li><a href="#about">Sobre mí</a></li>
+    <li><a href="#services">Servicios</a></li>
+    <li><a href="#how">Proceso</a></li>
+    <li><a href="#testimonials">Testimonios</a></li>
+    <li><a href="#gallery">Galería</a></li>
+    <li><a href="#calendario">Agenda</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ul>
+  <a href="#reservar" class="nav-cta">Reservar sesión</a>
+  <button class="hamburger" id="hamburger" aria-label="Abrir menú">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- MOBILE DRAWER -->
+<div class="nav-drawer" id="nav-drawer">
+  <div class="nav-drawer-panel">
+    <a href="#about"        onclick="closeDrawer()">Sobre mí</a>
+    <a href="#services"     onclick="closeDrawer()">Servicios</a>
+    <a href="#how"          onclick="closeDrawer()">Proceso</a>
+    <a href="#testimonials" onclick="closeDrawer()">Testimonios</a>
+    <a href="#gallery"      onclick="closeDrawer()">Galería</a>
+    <a href="#calendario"  onclick="closeDrawer()">Agenda</a>
+    <a href="#faq"          onclick="closeDrawer()">FAQ</a>
+    <a href="#reservar" class="drawer-cta" onclick="closeDrawer()">Reservar sesión</a>
+  </div>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg-circle"></div>
+  <div class="hero-text">
+    <div class="hero-tag">Psicología Clínica</div>
+    <h1>Un espacio para <em>sanar</em> y crecer contigo</h1>
+    <p class="hero-desc">Acompañamiento psicológico profesional, empático y personalizado. Porque tu bienestar mental merece atención de calidad.</p>
+    <div class="hero-btns">
+      <a href="#reservar" class="btn-primary">Reservar mi primera sesión</a>
+      <a href="#about" class="btn-outline">Conocer más</a>
+    </div>
+  </div>
+  <div class="hero-img">
+    <img fetchpriority="high" src="https://images.unsplash.com/photo-1594824476967-48c8b964273f?w=480&q=75&auto=format&fit=crop&fp-y=0.2&fm=webp" alt="Dra. Valentina Ríos" />
+    <div class="hero-badge">
+      <div class="badge-icon">🏅</div>
+      <div class="badge-text"><strong>+10 años</strong> de experiencia clínica</div>
+    </div>
+    <div class="hero-stat">
+      <div class="num">500+</div>
+      <div class="lbl">Pacientes acompañados</div>
+    </div>
+  </div>
+</section>
+
+<!-- STRIP -->
+<div class="strip">
+  <div class="strip-inner">
+    <div class="strip-item"><span>✦</span> Ansiedad y estrés</div>
+    <div class="strip-item"><span>✦</span> Terapia de pareja</div>
+    <div class="strip-item"><span>✦</span> Depresión</div>
+    <div class="strip-item"><span>✦</span> Autoestima</div>
+    <div class="strip-item"><span>✦</span> Duelo y pérdida</div>
+    <div class="strip-item"><span>✦</span> Trauma</div>
+    <div class="strip-item"><span>✦</span> Sesiones online</div>
+    <div class="strip-item"><span>✦</span> Consultas presenciales</div>
+    <!-- repite para loop suave -->
+    <div class="strip-item"><span>✦</span> Ansiedad y estrés</div>
+    <div class="strip-item"><span>✦</span> Terapia de pareja</div>
+    <div class="strip-item"><span>✦</span> Depresión</div>
+    <div class="strip-item"><span>✦</span> Autoestima</div>
+    <div class="strip-item"><span>✦</span> Duelo y pérdida</div>
+    <div class="strip-item"><span>✦</span> Trauma</div>
+    <div class="strip-item"><span>✦</span> Sesiones online</div>
+    <div class="strip-item"><span>✦</span> Consultas presenciales</div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-img-wrap fade-in">
+    <img src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=500&q=75&auto=format&fit=crop&fp-y=0.15&fm=webp" alt="Valentina Ríos en consulta" />
+    <div class="about-quote">"Cada mente merece ser escuchada sin juicio."</div>
+  </div>
+  <div class="about-text fade-in">
+    <div class="section-label">Sobre mí</div>
+    <h2>Hola, soy la <em>Dra. Valentina Ríos</em></h2>
+    <p>Soy psicóloga clínica con más de 10 años de experiencia acompañando a personas en sus procesos de cambio y sanación. Me especializo en terapia cognitivo-conductual y enfoques humanistas, adaptando cada tratamiento a las necesidades únicas de cada persona.</p>
+    <p>Creo que la terapia más efectiva nace de un vínculo de confianza genuino. Mi consulta es un espacio libre de juicio donde puedes ser completamente tú.</p>
+    <div class="credentials">
+      <div class="credential-item"><div class="cred-dot"></div>Licenciada en Psicología — UBA (2012)</div>
+      <div class="credential-item"><div class="cred-dot"></div>Especialización en Terapia Cognitivo-Conductual — ACTA</div>
+      <div class="credential-item"><div class="cred-dot"></div>Formación en Mindfulness y Regulación Emocional</div>
+      <div class="credential-item"><div class="cred-dot"></div>Miembro activa de la Asociación Argentina de TCC</div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="services-header fade-in">
+    <div class="section-label">Lo que ofrezco</div>
+    <h2>Servicios diseñados para <em>tu bienestar</em></h2>
+  </div>
+  <div class="services-grid fade-in">
+
+    <!-- 1. Terapia Individual -->
+    <div class="service-card">
+      <img loading="lazy" decoding="async" class="service-img"
+        src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=70&auto=format&fit=crop&crop=top&fm=webp"
+        alt="Terapia Individual" />
+      <div class="service-body">
+        <div class="service-icon">🌱</div>
+        <h3>Terapia Individual</h3>
+        <p>Un espacio personal para explorar tus emociones, pensamientos y patrones de conducta. Enfoque personalizado para cada etapa de tu proceso.</p>
+        <div class="service-price">Desde <strong>$8.000</strong> / sesión</div>
+      </div>
+    </div>
+
+    <!-- 2. Plan Intensivo (featured) -->
+    <div class="service-card featured">
+      <img loading="lazy" decoding="async" class="service-img"
+        src="https://images.unsplash.com/photo-1544027993-37dbfe43562a?w=400&q=70&auto=format&fit=crop&fm=webp"
+        alt="Plan Intensivo" />
+      <div class="service-body">
+        <div class="service-icon">💫</div>
+        <h3>Plan Intensivo</h3>
+        <p>4 sesiones mensuales + seguimiento por WhatsApp. Ideal para quienes quieren un acompañamiento más profundo y sostenido en el tiempo.</p>
+        <div class="service-price">Desde <strong>$28.000</strong> / mes</div>
+      </div>
+    </div>
+
+    <!-- 3. Terapia de Pareja -->
+    <div class="service-card">
+      <img loading="lazy" decoding="async" class="service-img"
+        src="https://images.unsplash.com/photo-1516195851888-6f1a981a862e?w=400&q=70&auto=format&fit=crop&fm=webp"
+        alt="Terapia de Pareja" />
+      <div class="service-body">
+        <div class="service-icon">💑</div>
+        <h3>Terapia de Pareja</h3>
+        <p>Trabajamos juntos para mejorar la comunicación, resolver conflictos y fortalecer el vínculo afectivo entre ambos.</p>
+        <div class="service-price">Desde <strong>$12.000</strong> / sesión</div>
+      </div>
+    </div>
+
+    <!-- 4. Sesión Online -->
+    <div class="service-card">
+      <img loading="lazy" decoding="async" class="service-img"
+        src="https://images.unsplash.com/photo-1587614382346-4ec70e388b28?w=400&q=70&auto=format&fit=crop&fm=webp"
+        alt="Sesión Online" />
+      <div class="service-body">
+        <div class="service-icon">💻</div>
+        <h3>Sesión Online</h3>
+        <p>Misma calidad terapéutica desde la comodidad de tu hogar. Videollamada segura y privada, disponible en todo el país.</p>
+        <div class="service-price">Desde <strong>$7.500</strong> / sesión</div>
+      </div>
+    </div>
+
+    <!-- 5. Taller de Mindfulness -->
+    <div class="service-card">
+      <img loading="lazy" decoding="async" class="service-img"
+        src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=400&q=70&auto=format&fit=crop&fm=webp"
+        alt="Taller de Mindfulness" />
+      <div class="service-body">
+        <div class="service-icon">🧘</div>
+        <h3>Taller de Mindfulness</h3>
+        <p>Grupos reducidos para aprender técnicas de atención plena, manejo del estrés y regulación emocional. Cupos limitados.</p>
+        <div class="service-price">Desde <strong>$5.000</strong> / encuentro</div>
+      </div>
+    </div>
+
+    <!-- 6. Primera Consulta -->
+    <div class="service-card">
+      <img loading="lazy" decoding="async" class="service-img"
+        src="https://images.unsplash.com/photo-1573497491765-dccce02b29df?w=400&q=70&auto=format&fit=crop&fm=webp"
+        alt="Primera Consulta" />
+      <div class="service-body">
+        <div class="service-icon">🌙</div>
+        <h3>Primera Consulta</h3>
+        <p>Una sesión de evaluación inicial donde hablamos de tus necesidades, objetivos y determinamos juntos el mejor camino terapéutico.</p>
+        <div class="service-price"><strong>Gratuita</strong> · 30 minutos</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- HOW -->
+<section id="how">
+  <div class="how-grid">
+    <div class="fade-in">
+      <div class="section-label">El proceso</div>
+      <h2>¿Cómo <em>funciona</em>?</h2>
+      <div class="how-steps">
+        <div class="step">
+          <div class="step-num">01</div>
+          <div class="step-body">
+            <h4>Reservá tu sesión online</h4>
+            <p>Elegí el día y horario que más te convenga desde el formulario de reserva. Recibirás confirmación inmediata.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">02</div>
+          <div class="step-body">
+            <h4>Abonás con tu método preferido</h4>
+            <p>Tarjeta de crédito/débito o Mercado Pago. Pago 100% seguro con confirmación al instante.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">03</div>
+          <div class="step-body">
+            <h4>Nos encontramos</h4>
+            <p>Presencial en consultorio o por videollamada. Recibirás el link o dirección por email y WhatsApp.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">04</div>
+          <div class="step-body">
+            <h4>Seguimos creciendo juntos</h4>
+            <p>Evaluamos tu progreso y ajustamos el plan según tus objetivos. Estoy a tu lado en cada paso.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="how-img fade-in">
+      <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1616587226960-4a03badbe8bf?w=500&q=75&auto=format&fit=crop&fm=webp" alt="Consulta de psicología" />
+      <div class="how-img-overlay">
+        <div class="overlay-icon">📅</div>
+        <div class="overlay-text">
+          <strong>Turnos disponibles</strong>
+          Lun – Sáb, 9:00 – 20:00
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials">
+  <div class="test-header fade-in">
+    <div class="section-label">Testimonios</div>
+    <h2>Lo que dicen mis <em>pacientes</em></h2>
+  </div>
+  <div class="test-grid fade-in">
+    <div class="test-card">
+      <div class="test-stars">★★★★★</div>
+      <p class="test-body">"Valentina me ayudó a entender patrones que nunca había visto en mí. Después de 6 meses de terapia me siento una persona diferente, más libre y en paz conmigo misma."</p>
+      <div class="test-author">
+        <div class="test-avatar"><img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=80&q=65&fm=webp&auto=format&fit=crop&fp-x=0.5&fp-y=0.2" alt="María G." /></div>
+        <div><div class="test-name">María G.</div><div class="test-role">Paciente desde 2022</div></div>
+      </div>
+    </div>
+    <div class="test-card">
+      <div class="test-stars">★★★★★</div>
+      <p class="test-body">"Empecé la terapia con mucho miedo y poca esperanza. Valentina creó un ambiente tan seguro que en pocos meses pude hablar de cosas que nunca había contado a nadie."</p>
+      <div class="test-author">
+        <div class="test-avatar"><img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&q=65&fm=webp&auto=format&fit=crop&fp-x=0.5&fp-y=0.15" alt="Rodrigo P." /></div>
+        <div><div class="test-name">Rodrigo P.</div><div class="test-role">Paciente desde 2023</div></div>
+      </div>
+    </div>
+    <div class="test-card">
+      <div class="test-stars">★★★★★</div>
+      <p class="test-body">"Las sesiones de pareja salvaron nuestra relación. Aprendimos a comunicarnos de verdad. Lo que nos regaló Valentina no tiene precio."</p>
+      <div class="test-author">
+        <div class="test-avatar"><img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&q=65&fm=webp&auto=format&fit=crop&fp-x=0.5&fp-y=0.1" alt="Laura" /></div>
+        <div><div class="test-name">Laura & Martín</div><div class="test-role">Pacientes desde 2021</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BOOKING -->
+<section id="reservar">
+  <div class="booking-wrap">
+    <div class="booking-info fade-in">
+      <div class="section-label" style="color:var(--sage-lt);">Reservas</div>
+      <h2>Agendá tu <em>sesión</em> hoy</h2>
+      <p>Dar el primer paso puede ser difícil, pero estoy aquí para acompañarte. Completá el formulario y recibís confirmación inmediata.</p>
+      <div class="booking-features">
+        <div class="booking-feature"><span class="bf-icon">✓</span> Confirmación por email y WhatsApp</div>
+        <div class="booking-feature"><span class="bf-icon">✓</span> Pago 100% seguro y encriptado</div>
+        <div class="booking-feature"><span class="bf-icon">✓</span> Cancelación hasta 24 hs antes sin cargo</div>
+        <div class="booking-feature"><span class="bf-icon">✓</span> Factura electrónica incluida</div>
+        <div class="booking-feature"><span class="bf-icon">✓</span> Recordatorio automático 1 hora antes</div>
+      </div>
+    </div>
+
+    <div class="booking-form fade-in">
+      <div id="form-content">
+        <div class="form-title">Completá tus datos</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Nombre</label>
+            <input type="text" id="fname" placeholder="Tu nombre" />
+          </div>
+          <div class="form-group">
+            <label>Apellido</label>
+            <input type="text" id="lname" placeholder="Tu apellido" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="email" placeholder="tu@email.com" />
+        </div>
+        <div class="form-group">
+          <label>Teléfono / WhatsApp</label>
+          <input type="tel" id="phone" placeholder="+54 9 11 0000-0000" />
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Tipo de sesión</label>
+            <select id="session-type">
+              <option value="">Seleccioná</option>
+              <option>Primera Consulta (Gratis)</option>
+              <option>Terapia Individual</option>
+              <option>Sesión Online</option>
+              <option>Terapia de Pareja</option>
+              <option>Plan Intensivo</option>
+              <option>Taller de Mindfulness</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Modalidad</label>
+            <select id="modality">
+              <option value="">Seleccioná</option>
+              <option>Presencial (CABA)</option>
+              <option>Online (videollamada)</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Fecha preferida</label>
+            <input type="date" id="date" />
+          </div>
+          <div class="form-group">
+            <label>Horario preferido</label>
+            <select id="time">
+              <option value="">Seleccioná</option>
+              <option>09:00</option><option>10:00</option><option>11:00</option>
+              <option>12:00</option><option>15:00</option><option>16:00</option>
+              <option>17:00</option><option>18:00</option><option>19:00</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Mensaje (opcional)</label>
+          <textarea id="message" placeholder="Contame brevemente qué te trajo por acá..."></textarea>
+        </div>
+
+        <!-- PAYMENT -->
+        <div class="payment-section">
+          <div class="payment-label">Método de pago</div>
+          <div class="payment-methods">
+            <button class="pay-btn" onclick="selectPay(this,'mp')">
+              <span class="pay-ico">💙</span> Mercado Pago
+            </button>
+            <button class="pay-btn" onclick="selectPay(this,'card')">
+              <span class="pay-ico">💳</span> Tarjeta
+            </button>
+            <button class="pay-btn" onclick="selectPay(this,'later')">
+              <span class="pay-ico">📅</span> Pagar en consulta
+            </button>
+          </div>
+
+          <!-- Card fields -->
+          <div class="card-fields" id="card-fields">
+            <div class="form-group">
+              <label>Número de tarjeta</label>
+              <input type="text" id="card-num" placeholder="0000 0000 0000 0000" maxlength="19" oninput="formatCard(this)" />
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Vencimiento</label>
+                <input type="text" placeholder="MM/AA" maxlength="5" oninput="formatExp(this)" />
+              </div>
+              <div class="form-group">
+                <label>CVV</label>
+                <input type="text" placeholder="123" maxlength="4" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Nombre en la tarjeta</label>
+              <input type="text" placeholder="Como aparece en la tarjeta" />
+            </div>
+          </div>
+
+          <!-- Mercado Pago info -->
+          <div class="mp-info" id="mp-info">
+            Al confirmar serás redirigido a <span class="mp-logo">Mercado Pago</span> para completar el pago de forma segura. Aceptamos todas las tarjetas y saldo MP.
+          </div>
+        </div>
+
+        <button class="btn-submit" id="submit-btn" onclick="submitForm()">Confirmar Reserva</button>
+        <p class="form-note">🔒 Pago encriptado · Tus datos están protegidos</p>
+      </div>
+
+      <!-- SUCCESS -->
+      <div class="success-msg" id="success-msg">
+        <div class="success-icon">🌿</div>
+        <h3>¡Reserva confirmada!</h3>
+        <p>Tu reserva fue recibida. En un momento se abrirá WhatsApp para que Valentina reciba los detalles de tu turno. ¡Hasta pronto! 🌿</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section id="gallery">
+  <div class="gallery-header fade-in">
+    <div class="section-label">Galería</div>
+    <h2>Mi espacio de <em>consulta</em></h2>
+    <p style="font-size:.95rem;line-height:1.8;color:var(--mid);font-weight:300;margin-top:.8rem;">Un lugar cálido, seguro y pensado para que te sientas cómodo desde el primer momento.</p>
+  </div>
+  <div class="gallery-grid fade-in">
+    <div class="gallery-item" onclick="openLightbox(0)">
+      <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=600&q=70&auto=format&fit=crop&fm=webp" alt="Consultorio" loading="lazy"/>
+      <div class="gallery-overlay"><span class="gallery-caption">Sala de espera</span></div>
+    </div>
+    <div class="gallery-item" onclick="openLightbox(1)">
+      <img src="https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&q=70&auto=format&fit=crop&fm=webp" alt="Consultorio" loading="lazy"/>
+      <div class="gallery-overlay"><span class="gallery-caption">Rincón de lectura</span></div>
+    </div>
+    <div class="gallery-item" onclick="openLightbox(2)">
+      <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&q=70&auto=format&fit=crop&fm=webp" alt="Consultorio" loading="lazy"/>
+      <div class="gallery-overlay"><span class="gallery-caption">Espacio terapéutico</span></div>
+    </div>
+    <div class="gallery-item" onclick="openLightbox(3)">
+      <img src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=400&q=70&auto=format&fit=crop&fm=webp" alt="Consultorio" loading="lazy"/>
+      <div class="gallery-overlay"><span class="gallery-caption">Detalle decorativo</span></div>
+    </div>
+    <div class="gallery-item" onclick="openLightbox(4)">
+      <img src="https://images.unsplash.com/photo-1604014237800-1c9102c219da?w=600&q=70&auto=format&fit=crop&fm=webp" alt="Consultorio" loading="lazy"/>
+      <div class="gallery-overlay"><span class="gallery-caption">Sala principal</span></div>
+    </div>
+    <div class="gallery-item" onclick="openLightbox(5)">
+      <img src="https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=400&q=70&auto=format&fit=crop&fm=webp" alt="Consultorio" loading="lazy"/>
+      <div class="gallery-overlay"><span class="gallery-caption">Vista del consultorio</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- CALENDARIO -->
+<section id="calendario">
+  <div class="cal-wrap">
+    <div class="cal-info fade-in">
+      <div class="section-label">Agenda en línea</div>
+      <h2>Elegí tu <em>día y horario</em></h2>
+      <p>Visualizá la disponibilidad en tiempo real y seleccioná el turno que más se adapte a tu rutina. Confirmación inmediata por email.</p>
+      <div style="display:flex;flex-direction:column;gap:.8rem;margin-top:1rem;">
+        <div style="display:flex;gap:.7rem;align-items:center;font-size:.9rem;color:var(--mid);">
+          <span style="width:12px;height:12px;border-radius:50%;background:var(--sage);flex-shrink:0;"></span> Turnos disponibles
+        </div>
+        <div style="display:flex;gap:.7rem;align-items:center;font-size:.9rem;color:var(--mid);">
+          <span style="width:12px;height:12px;border-radius:50%;background:var(--accent);flex-shrink:0;"></span> Hoy
+        </div>
+        <div style="display:flex;gap:.7rem;align-items:center;font-size:.9rem;color:var(--mid);">
+          <span style="width:12px;height:12px;border-radius:50%;background:rgba(143,166,138,.25);flex-shrink:0;"></span> No disponible
+        </div>
+      </div>
+    </div>
+    <div class="cal-box fade-in" id="calendar-box">
+      <div class="cal-header">
+        <button class="cal-nav-btn" onclick="calNav(-1)">‹</button>
+        <div class="cal-month" id="cal-month-label"></div>
+        <button class="cal-nav-btn" onclick="calNav(1)">›</button>
+      </div>
+      <div class="cal-days-header">
+        <span>Do</span><span>Lu</span><span>Ma</span>
+        <span>Mi</span><span>Ju</span><span>Vi</span><span>Sá</span>
+      </div>
+      <div class="cal-days" id="cal-days"></div>
+      <div class="time-slots" id="time-slots" style="display:none;">
+        <div class="time-slots-label">Horarios disponibles</div>
+        <div class="slots-grid" id="slots-grid"></div>
+      </div>
+      <button class="cal-confirm-btn" id="cal-confirm" disabled onclick="calConfirm()">
+        Seleccioná un día y horario
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="faq-wrap">
+    <div class="faq-text">
+      <div class="section-label">FAQ</div>
+      <h2>Preguntas <em>frecuentes</em></h2>
+      <p>Si tenés alguna duda que no está acá, escribime directamente por WhatsApp o email. Con gusto te respondo.</p>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">¿Cómo sé si la terapia es para mí? <span class="faq-arrow">▾</span></button>
+        <div class="faq-a">Si estás pasando por momentos difíciles, sentís que algo no está bien o simplemente querés crecer y conocerte mejor, la terapia puede ser muy beneficiosa. No hace falta tener una "crisis" para empezar.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">¿Cuánto dura cada sesión? <span class="faq-arrow">▾</span></button>
+        <div class="faq-a">Las sesiones individuales duran 50 minutos, las de pareja 60-70 minutos. La primera consulta de evaluación es de 30 minutos y es completamente gratuita.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">¿Cuántas sesiones voy a necesitar? <span class="faq-arrow">▾</span></button>
+        <div class="faq-a">Depende de cada persona y de sus objetivos. Algunos cambios se notan en pocas semanas; otros procesos requieren más tiempo. Lo evaluamos juntas desde el inicio y lo revisamos periódicamente.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">¿Las sesiones online son igual de efectivas? <span class="faq-arrow">▾</span></button>
+        <div class="faq-a">Sí. Numerosos estudios muestran que la terapia online tiene la misma eficacia que la presencial. Muchos pacientes incluso prefieren la comodidad de hacerla desde casa.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">¿Qué pasa si necesito cancelar un turno? <span class="faq-arrow">▾</span></button>
+        <div class="faq-a">Podés cancelar o reprogramar sin cargo hasta 24 horas antes de tu sesión. Las cancelaciones con menos anticipación se cobran el 50% del valor de la sesión.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">¿Puedo pagar con obra social o prepaga? <span class="faq-arrow">▾</span></button>
+        <div class="faq-a">Actualmente trabajo de forma particular. Podés solicitar un recibo oficial para luego gestionar el reintegro con tu obra social, según lo que permita tu cobertura.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="#" class="nav-logo">Dra. Valentina <span>Ríos</span></a>
+      <p>Psicóloga clínica especializada en terapia cognitivo-conductual y bienestar emocional. Consultorio en CABA y atención online.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Navegación</h4>
+      <ul>
+        <li><a href="#about">Sobre mí</a></li>
+        <li><a href="#services">Servicios</a></li>
+        <li><a href="#how">Proceso</a></li>
+        <li><a href="#testimonials">Testimonios</a></li>
+        <li><a href="#reservar">Reservar sesión</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contacto</h4>
+      <ul>
+        <li><a href="/cdn-cgi/l/email-protection#4d2522212c0d3b2c2128233924232c3f24223e3d3e242e2221222a242c632e2220632c3f"><span class="__cf_email__" data-cfemail="9ff7f0f3fedfe9fef3faf1ebf6f1feedf6f0ecb1fcf0f2b1feed">[email&#160;protected]</span></a></li>
+        <li><a href="https://wa.me/5491100000000">WhatsApp: +54 9 11 0000-0000</a></li>
+        <li><a href="#">Instagram: @dra.valentinarios</a></li>
+        <li><a href="#">Palermo, CABA · Sólo con turno</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2024 Dra. Valentina Ríos · Matrícula Nº 12345 · CABA</span>
+    <span>Diseñado con ♥</span>
+  </div>
+</footer>
+
+  <!-- Main script -->
+  <script src="assets/js/main.js"></script>
+</body>
+</html>
